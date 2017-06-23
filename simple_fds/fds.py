@@ -11,12 +11,10 @@ from .lsstan import LssTangent#, tangent_initial_condition
 from .timeseries import windowed_mean
 # ---------------------------------------------------------------------------- #
 
-def tangent_initial_condition(subspace_dimension):
-    #np.random.seed(12)
-    W = np.random.rand(len(
-    #W = (pascal.qr(W.T))[0].T
-    W = pascal.qr_transpose(W)[0]
-    w = pascal.zeros()
+def tangent_initial_condition(subspace_dimension,total_dimension):
+    W = np.random.rand(subspace_dimension,total_dimension)
+    W = np.linalg.qr(W.transpose())[0].transpose()
+    w = np.zeros(total_dimension)
     return W, w
 
 def lss_gradient(checkpoint, segment_range=None):
@@ -83,36 +81,26 @@ class RunWrapper:
             raise e
 
 def continue_shadowing(
-        run, parameter, checkpoint,
-        num_segments, steps_per_segment, epsilon=1E-6,
-        checkpoint_path=None, checkpoint_interval=1, simultaneous_runs=None,
-        run_ddt=None, return_checkpoint=False, get_host_dir=None, spawn_compute_job=None):
+        run, parameter,
+        num_segments, steps_per_segment, epsilon=1E-6,V,v,u0):
     """
     """
-    compute_outputs = []
+    
 
     run = RunWrapper(run)
     assert verify_checkpoint(checkpoint)
     u0, V, v, lss, G_lss, g_lss, J_hist, G_dil, g_dil = checkpoint
 
-    manager = Manager()
-    interprocess = (manager.Lock(), manager.dict())
 
     i = lss.K_segments()
-    run_id = 'time_dilation_{0:02d}'.format(i)
-    if run_ddt is not None:
-        time_dil = TimeDilationExact(run_ddt, u0, parameter)
-    else:
-        time_dil = TimeDilation(run, u0, parameter, run_id,
-                                simultaneous_runs, interprocess)
+    time_dil = TimeDilation(run, u0, parameter)
 
     V = time_dil.project(V)
     v = time_dil.project(v)
 
     u0, V, v, J0, G, g = run_segment(
             run, u0, V, v, parameter, i, steps_per_segment,
-            epsilon, simultaneous_runs, interprocess, get_host_dir=get_host_dir,
-            compute_outputs=compute_outputs, spawn_compute_job=spawn_compute_job)
+            epsilon)
 
     J_hist.append(J0)
     G_lss.append(G)
@@ -170,44 +158,30 @@ def continue_shadowing(
 
 def shadowing(
         run, u0, parameter, subspace_dimension, num_segments,
-        steps_per_segment, runup_steps, epsilon=1E-6,
-        checkpoint_path=None, checkpoint_interval=1, simultaneous_runs=None,
-        run_ddt=None, return_checkpoint=False, get_host_dir=None, spawn_compute_job=None):
+        steps_per_segment, runup_steps, epsilon=1E-6):
     '''
     run: a function in the form
-         u1, J = run(u0, parameter, steps, run_id, interprocess)
+         u1, J = run(u0, parameter, steps)
 
          inputs  - u0:           init solution, a flat numpy array of doubles.
                    parameter:    design parameter, a single number.
                    steps:        number of time steps, an int.
-                   run_id:       a unique identifier, a string,
-                                 e.g., "segment02_init_perturb003".
-                   interprocess: a tuple of (lock, dict) for
-                                 synchronizing between different runs.
-                                 lock: a multiprocessing.Manager.Lock object.
-                                 dict: a multiprocessing.Manager.dict object.
          outputs - u1:           final solution, a flat numpy array of doubles,
                                  must be of the same size as u0.
                    J:            quantities of interest, a numpy array of shape
                                  (steps, n_qoi), where n_qoi is an arbitrary
                                  but consistent number, # quantities of interest.
     '''
-    u0 = pascal.symbolic_array(field=u0)
+    
 
     run = RunWrapper(run)
-    manager = Manager()
-    interprocess = (manager.Lock(), manager.dict())
-
+  
     if runup_steps > 0:
-        u0, _ = run(u0.field, parameter, runup_steps, 'runup', interprocess)
-        u0 = pascal.symbolic_array(field=u0)
-        #print u0.field
+        u0, _ = run(u0, parameter, runup_steps)
 
-    V, v = tangent_initial_condition(subspace_dimension)
+    total_dimension = len(u0) 
+    V, v = tangent_initial_condition(subspace_dimension,total_dimension)
     lss = LssTangent()
-    checkpoint = Checkpoint(u0, V, v, lss, [], [], [], [], [])
     return continue_shadowing(
-            run, parameter, checkpoint,
-            num_segments, steps_per_segment, epsilon,
-            checkpoint_path, checkpoint_interval,
-            simultaneous_runs, run_ddt, return_checkpoint, get_host_dir, spawn_compute_job)
+            run, parameter,
+            num_segments, steps_per_segment, epsilon,V,v,u0)
