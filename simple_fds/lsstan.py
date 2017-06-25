@@ -17,7 +17,7 @@ class LssTangent:
 
     def checkpoint(self, V, v):
         Q, R = np.linalg.qr(V.transpose())
-	Q = Q.transpose()
+        Q = Q.transpose()
         b = np.dot(Q, v)
         #V[:] = Q
         #v -= pascal.dot(b, Q)
