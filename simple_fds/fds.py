@@ -17,8 +17,7 @@ def tangent_initial_condition(subspace_dimension,total_dimension):
     w = np.zeros(total_dimension)
     return W, w
 
-def lss_gradient(checkpoint, segment_range=None):
-    _, _, _, lss, G_lss, g_lss, J, G_dil, g_dil = checkpoint
+def lss_gradient(lss, G_lss, g_lss, G_dil, g_dil, segment_range=None):
     if segment_range is not None:
         lss = deepcopy(lss)
         if isinstance(segment_range, int):
@@ -45,50 +44,21 @@ class RunWrapper:
     def __init__(self, run):
         self.run = run
 
-    def variable_args(self, u0, parameter, steps, run_id, interprocess):
-        try:
-            return self.run(u0, parameter, steps,
-                            run_id=run_id, interprocess=interprocess)
-        except TypeError as e1:
-            # does not expect run_id or interprocess argument
-            tb1 = traceback.format_exc()
-        try:
-            return self.run(u0, parameter, steps, run_id=run_id)
-        except TypeError as e2:
-            # does not expect run_id
-            tb2 = traceback.format_exc()
-        try:
-            return self.run(u0, parameter, steps, interprocess=interprocess)
-        except TypeError as e3:
-            # expects neither run_id nor interprocess
-            tb3 = traceback.format_exc()
-        try:
-            return self.run(u0, parameter, steps)
-        except TypeError as e4:
-            tb4 = traceback.format_exc() # failed
-        for tb in (tb1, tb2, tb3, tb4):
-            sys.stderr.write(str(tb) + '\n')
-        raise TypeError
-
-    def __call__(self, u0, parameter, steps, run_id, interprocess):
-        try:
-            u1, J = self.variable_args(
-                    u0, parameter, steps, run_id, interprocess)
+    def variable_args(self, u0, parameter, steps):
+        return self.run(u0, parameter, steps)
+    def __call__(self, u0, parameter, steps):
+        u1, J = self.variable_args(
+                    u0, parameter, steps)
             return u1, np.array(J).reshape([steps, -1])
-        except Exception as e:
-            tb = traceback.format_exc()
-            sys.stderr.write(str(tb) + '\n')
-            raise e
-
+      
 def continue_shadowing(
         run, parameter,
-        num_segments, steps_per_segment, epsilon=1E-6,V,v,u0):
+        num_segments, steps_per_segment, epsilon=1E-6,V, v, u0, lss):
     """
     """
     
 
     run = RunWrapper(run)
-    assert verify_checkpoint(checkpoint)
     u0, V, v, lss, G_lss, g_lss, J_hist, G_dil, g_dil = checkpoint
 
 
@@ -184,4 +154,4 @@ def shadowing(
     lss = LssTangent()
     return continue_shadowing(
             run, parameter,
-            num_segments, steps_per_segment, epsilon,V,v,u0)
+            num_segments, steps_per_segment, epsilon, V, v, u0, lss)
