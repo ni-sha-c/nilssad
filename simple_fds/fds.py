@@ -5,10 +5,10 @@ from copy import deepcopy
 
 import numpy as np
 
-from timedilation import TimeDilation, TimeDilationExact
-from segment import run_segment, trapez_mean
-from lsstan import LssTangent#, tangent_initial_condition
-from timeseries import windowed_mean
+from .timedilation import TimeDilation, TimeDilationExact
+from .segment import run_segment, trapez_mean
+from .lsstan import LssTangent#, tangent_initial_condition
+from .timeseries import windowed_mean
 # ---------------------------------------------------------------------------- #
 
 def tangent_initial_condition(subspace_dimension,total_dimension):
@@ -17,7 +17,8 @@ def tangent_initial_condition(subspace_dimension,total_dimension):
     w = np.zeros(total_dimension)
     return W, w
 
-def lss_gradient(lss, G_lss, g_lss, G_dil, g_dil, segment_range=None):
+def lss_gradient(lss, G_lss, g_lss, J, G_dil, g_dil, segment_range=None):
+    
     if segment_range is not None:
         lss = deepcopy(lss)
         if isinstance(segment_range, int):
@@ -38,7 +39,8 @@ def lss_gradient(lss, G_lss, g_lss, G_dil, g_dil, segment_range=None):
     steps_per_segment = J.shape[1]
     dil = ((alpha * G_dil).sum(1) + g_dil) / steps_per_segment
     grad_dil = dil[:,np.newaxis] * dJ
-    return windowed_mean(grad_lss) + windowed_mean(grad_dil)
+    print(shape(grad_dil))
+	return windowed_mean(grad_lss) + windowed_mean(grad_dil)
 
 class RunWrapper:
     def __init__(self, run):
@@ -103,7 +105,7 @@ def continue_shadowing(
             G_lss.append(G)
             g_lss.append(g)
 
-        G = lss_gradient(lss, G_lss, g_lss, G_dil, g_dil)
+        G = lss_gradient(lss, G_lss, g_lss, J_hist, G_dil, g_dil)
         return np.array(J_hist).mean((0,1)), G
 
 def shadowing(
