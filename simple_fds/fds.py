@@ -39,8 +39,7 @@ def lss_gradient(lss, G_lss, g_lss, J, G_dil, g_dil, segment_range=None):
     steps_per_segment = J.shape[1]
     dil = ((alpha * G_dil).sum(1) + g_dil) / steps_per_segment
     grad_dil = dil[:,np.newaxis] * dJ
-    print(shape(grad_dil))
-	return windowed_mean(grad_lss) + windowed_mean(grad_dil)
+    return windowed_mean(grad_lss) + windowed_mean(grad_dil)
 
 class RunWrapper:
     def __init__(self, run):
