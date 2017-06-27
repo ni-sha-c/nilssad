@@ -39,13 +39,12 @@ def test_gradient():
         Ji, Gi = shadowing(solve, u0, si-28, 2, 10, 1000, 5000)
         J[i,:] = Ji
         G[i,:] = Gi
-    #assert all(abs(J[:,1] - 100) < 1E-12)
-    #assert all(abs(G[:,1]) < 1E-12)
+    assert all(abs(J[:,1] - 100) < 1E-12)
+    assert all(abs(G[:,1]) < 1E-12)
     print("s is", s)
     print("G is", G[:,0])
-    #assert all(abs(J[:,0] - ((s-31)**2 + 85)) < 20)
-    #assert all(abs(G[:,0] - (2 * (s-31))) < 2)
-
+    assert all(abs(J[:,0] - ((s-31)**2 + 85)) < 20)
+    assert all(abs(G[:,0] - (2 * (s-31))) < 2)
 ##if __name__ == '__main__':
 #def test_lyapunov():
 #    cp_path = os.path.join(my_path, 'lorenz_lyapunov')

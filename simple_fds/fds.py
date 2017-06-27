@@ -104,8 +104,8 @@ def continue_shadowing(
             G_lss.append(G)
             g_lss.append(g)
 
-        G = lss_gradient(lss, G_lss, g_lss, J_hist, G_dil, g_dil)
-        return np.array(J_hist).mean((0,1)), G
+    G = lss_gradient(lss, G_lss, g_lss, J_hist, G_dil, g_dil)
+    return np.array(J_hist).mean((0,1)), G
 
 def shadowing(
         run, u0, parameter, subspace_dimension, num_segments,
