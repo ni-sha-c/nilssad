@@ -7,6 +7,7 @@ subroutine head_inhomogeneous(s,zres,X0,v0,nSteps)
 	double precision, dimension(3), intent(in) :: X0, v0
 	double precision, intent(out) :: zres
 	integer :: t
+	integer, intent(in) :: t, nSteps
 	double precision :: ds
 
 
