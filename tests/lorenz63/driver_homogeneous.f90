@@ -10,9 +10,14 @@ program driver
 	double precision :: dzds_t
 	integer :: t, nSteps
 	double precision :: zs, z0, ds
+	character(len=128) :: arg
+
+
 	ds = 0.005d0
 	y%d=1.0D0
 	our_rev_mode%tape=.TRUE.
+
+
 	
 	if (command_argument_count() .ne. 1) then
         print *, "Need number of time steps"
@@ -42,7 +47,7 @@ program driver
 
 
 	
-	call head(x,y,X0,v0)
+	call head_homogeneous(x,y,X0,v0,nSteps)
 	print *, 's =',x%v
 	print *, 'From AD, dzbar/ds = ',x%d
 

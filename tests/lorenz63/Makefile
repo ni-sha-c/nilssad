@@ -5,6 +5,11 @@ ifndef CC
 CC=gcc
 endif
 RTSUPP=w2f__types OAD_active OAD_cp OAD_tape OAD_rev   
+
+solver: $(addsuffix .o, $(RTSUPP) iaddr) lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver_homogeneous.o
+	${F90C} -o $@ $^
+
+
 driver: $(addsuffix .o, $(RTSUPP) iaddr) lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver.o
 	${F90C} -o $@ $^
 numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain 
