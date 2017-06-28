@@ -27,7 +27,7 @@ numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
 
 numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
-	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 .
+	
 
 toolChain : numCore.f90
 	openad -c -m rj $<
