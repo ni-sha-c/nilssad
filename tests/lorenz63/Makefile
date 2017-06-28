@@ -4,7 +4,7 @@ endif
 ifndef CC
 CC=gcc
 endif
-RTSUPP=w2f__types OAD_active OAD_cp OAD_tape OAD_rev   
+RTSUPP=w2f__types OAD_active_custom OAD_cp OAD_tape OAD_rev   
 
 
 solver_h: $(addsuffix .o, $(RTSUPP)) \
@@ -46,7 +46,7 @@ numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 toolChaini : numCorei.f90
 	openad -c -m f $<
 	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
-
+	cat OAD_active.f90 | sed 's/100/3/' > OAD_active_custom.f90	
 numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90
 	cat $^ > $@
 
