@@ -1,9 +1,9 @@
 program driver
 	use OAD_active
-	use OAD_rev
+	!use OAD_rev
 	use lorenz63_passive
 	implicit none 
-	external head
+	external head_inhomogeneous
 	type(active) :: x
     type(active), dimension(3) :: y
 	double precision, dimension(3) :: X0
@@ -15,8 +15,8 @@ program driver
 
 
 	ds = 0.005d0
-	y%d=1.0D0
-	our_rev_mode%tape=.TRUE.
+	!y%d=1.0D0
+	!our_rev_mode%tape=.TRUE.
 
 
 	
@@ -28,6 +28,7 @@ program driver
 	call get_command_argument(1, arg)
     Read(arg, '(i10)') nSteps
 
+!$openad INDEPENDENT(x)
 
 	Open(1, file="input_primal.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
@@ -48,10 +49,12 @@ program driver
 
 
 	
-	call head_homogeneous(x,y,X0,v0,nSteps)
+	call head_inhomogeneous(x,y,X0,v0,nSteps)
+	
 	print *, 's =',x%v
-	print *, 'From AD, v = ',x%d
+	print *, 'From AD, v = ', x%d
 
+!$openad DEPENDENT(y)
 	!check using tangent equation
 	do t = 1, nSteps, 1
 		call rk45_full(X0,v0,v)

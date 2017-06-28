@@ -13,7 +13,7 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 
 
 !$openad INDEPENDENT(s) 
-	ds = s - 2.8005e1
+	ds = 5.d-3
 	X(1) = X0(1) + v0(1)*ds
 	X(2) = X0(2) + v0(2)*ds
 	X(3) = X0(3) + v0(3)*ds

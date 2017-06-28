@@ -3,7 +3,7 @@ program driver
 	use OAD_rev
 	use lorenz63_passive
 	implicit none 
-	external head
+	external head_homogeneous
 	type(active) :: x
     type(active), dimension(3):: y
 	double precision, dimension(3) :: X0
