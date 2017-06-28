@@ -1,19 +1,18 @@
-subroutine head_homogeneous(s,zres,X0,v0,nSteps)
+subroutine head_homogeneous(s,ds,X0,v0,y,nSteps)
 	use Lorenz63
 	implicit none 
 	double precision, dimension(3) :: X
 	double precision, dimension(3) :: Xnp1_res
 	double precision, intent(in) :: s
 	double precision, dimension(3), intent(in) :: X0, v0
-	double precision, intent(out) :: zres
+	double precision, dimension(3), intent(out) :: y
 	integer :: t
-	integer, intent(in) :: t, nSteps
-	double precision :: ds
+	integer, intent(in) :: nSteps
+	double precision, intent(in) :: ds
 
 
 
-!$openad INDEPENDENT(s) 
-	ds = s - 2.8005e1
+!$openad INDEPENDENT(ds) 
 	X(1) = X0(1) + v0(1)*ds
 	X(2) = X0(2) + v0(2)*ds
 	X(3) = X0(3) + v0(3)*ds
@@ -21,10 +20,8 @@ subroutine head_homogeneous(s,zres,X0,v0,nSteps)
 		call Xnp1(X,Xnp1_res,s)
 		X = Xnp1_res
 	end do
-	zres = Xnp1_res(3) 
+	y = X 
 	!Let's differentiate v with respect to time
 
-!$openad DEPENDENT(zres)
+!$openad DEPENDENT(y)
 end subroutine
-
-
