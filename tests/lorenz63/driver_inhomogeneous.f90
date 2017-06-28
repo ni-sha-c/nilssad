@@ -52,7 +52,7 @@ program driver
 	call head_inhomogeneous(x,y,X0,v0,nSteps)
 	
 	print *, 's =',x%v
-	print *, 'From AD, v = ', y%d
+	print *, 'From AD, v = ', y(1)%d, y(2)%d
 
 !$openad DEPENDENT(y)
 	!check using tangent equation

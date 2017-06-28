@@ -27,25 +27,25 @@ numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
 
 numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
-	cp ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 .
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 .
 
 toolChain : numCore.f90
 	openad -c -m rj $<
-	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCore.f90: Lorenz63.f90 head.prepped.f90
 	cat $^ > $@
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<
-	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 	cat $^ > $@
 
 toolChaini : numCorei.f90
 	openad -c -m f $<
-	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90
 	cat $^ > $@
