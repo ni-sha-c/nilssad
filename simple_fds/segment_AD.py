@@ -32,7 +32,7 @@ def run_segment(run, u0, V, v, parameter, i_segment, steps,
 	res_0 = run(u0, parameter, steps)
 		
 	for j in range(subspace_dimension):
-		res_h.append(run(u1h[j], parameter, steps))
+		res_h.append(run_ht(u1h[j], parameter, steps))
     
 	# run inhomogeneous tangent
 	res_i = run(u1i, parameter + epsilon, steps)

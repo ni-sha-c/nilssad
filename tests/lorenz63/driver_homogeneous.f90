@@ -1,6 +1,6 @@
 program driver
 	use OAD_active
-	use OAD_rev
+	!use OAD_rev
 	use lorenz63_passive
 	implicit none 
 	external head_homogeneous
@@ -50,7 +50,7 @@ program driver
 	
 	call head_homogeneous(s,x,X0,v0,y,nSteps)
 	print *, 'epsilon =',x%v
-	print *, 'From AD, dX/depsilon = ',x%d
+	print *, 'From AD, dX/depsilon = ',y%d
 
 	!check using tangent equation
 	do t = 1, 100, 1

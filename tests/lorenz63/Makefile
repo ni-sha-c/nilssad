@@ -4,38 +4,48 @@ endif
 ifndef CC
 CC=gcc
 endif
-RTSUPP=w2f__types OAD_cp OAD_tape OAD_rev   
+RTSUPP=w2f__types OAD_active OAD_cp OAD_tape OAD_rev   
 
-solver_h: $(addsuffix .o, $(RTSUPP) OAD_active iaddr) lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_homogeneous.o
+
+solver_h: $(addsuffix .o, $(RTSUPP)) \
+lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_homogeneous.o
 	${F90C} -o $@ $^
 
-solver_i: $(addsuffix .o, $(RTSUPP) OAD_active iaddr) lorenz63_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_inhomogeneous.o
+solver_i: $(addsuffix .o, $(RTSUPP)) \ \
+lorenz63_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_inhomogeneous.o
 	${F90C} -o $@ $^
 
 
-driver: $(addsuffix .o, $(RTSUPP) OAD_active iaddr) lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver.o
+driver: $(addsuffix .o, $(RTSUPP)) \  \
+lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver.o
 	${F90C} -o $@ $^
 
-numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, OAD_active $(RTSUPP)) iaddr.c : toolChain 
 
-numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, OAD_active $(RTSUPP)) iaddr.c : toolChainh 
 
-numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  OAD_active $(RTSUPP)) iaddr.c : toolChaini 
+numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain 
+
+numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
+
+numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
+	cp ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 .
 
 toolChain : numCore.f90
 	openad -c -m rj $<
+	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCore.f90: Lorenz63.f90 head.prepped.f90
 	cat $^ > $@
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<
+	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 	cat $^ > $@
 
 toolChaini : numCorei.f90
-	openad -c -m rj $<
+	openad -c -m f $<
+	ln -sf ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90
 	cat $^ > $@
@@ -46,6 +56,9 @@ lorenz63_passive.f90: Lorenz63.f90
   
 
 ad_inline.f:toolChain
+
+
+
 
 %.o : %.f90
 	${F90C} -o $@ -c $< 
@@ -59,7 +72,8 @@ ad_inline.f:toolChain
 
 clean: 
 	rm -f ad_template* ad_inline.f OAD_* w2f__*  iaddr* 
-	rm -f head.prepped.pre.* *.B *.xaif *.o *.mod driver driverE *~ 
+	rm -f head.prepped.pre.* *.B *.xaif *.o *.mod driver driverE *~
+	rm -f numCore* 
 .PHONY: clean toolChain
 # the following include has explicit rules that could replace the openad script
 include MakeExplRules.inc
