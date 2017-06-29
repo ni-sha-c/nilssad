@@ -5,7 +5,7 @@ program driver
 	implicit none 
 	external head_inhomogeneous
 	type(active) :: x
-    type(active), dimension(3) :: y
+    type(active) :: y
 	double precision, dimension(3) :: X0
 	double precision, dimension(3,1) :: v0,v
 	double precision :: dzds_t
@@ -49,10 +49,10 @@ program driver
 
 
 	
-	call head_inhomogeneous(x,y,X0,v0,nSteps)
-	
+	!call head_inhomogeneous(x,y,X0,v0,nSteps)
+	y = x	
 	print *, 's =',x%v
-	print *, 'From AD, v = ', y(1)%d, y(2)%d
+	print *, 'From AD, v = ', y%d
 
 !$openad DEPENDENT(y)
 	!check using tangent equation
