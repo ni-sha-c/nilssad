@@ -19,11 +19,16 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 	X(3) = X0(3) + v0(3)*ds
 	do t = 1, nSteps, 1
 		call Xnp1(X,Xnp1_res,s)
-		X = Xnp1_res
+		X(1) = Xnp1_res(1)
+		X(2) = Xnp1_res(2)
+		X(3) = Xnp1_res(3)
 	end do
-	y(1) = 2.0*s
-	y(2) = 0.d0
-	y(3) = 0.d0
+	do t = 1, 3, 1
+		y(t) = X(t)
+	end do
+	!y(1) = 1.d0
+	!y(2) = s
+	!y(3) = 1.d0
 !$openad DEPENDENT(y)
 
 end subroutine

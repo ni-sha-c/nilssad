@@ -10,26 +10,39 @@ subroutine Xnp1(X,Xnp1_res,r)
 	double precision, dimension(3):: X, Xnp1_res
     double precision, dimension(3):: k1, k2, k3, k4
 	double precision, dimension(3):: ddt
-	integer :: i
+	integer :: i, imax
 	double precision :: dt
-	double precision, intent(in) :: r
+	double precision :: r
 	
 	dt = 0.005d0
-		
+	imax = size(X)
+	
     call dXdt(X,ddt,r)
-    k1 = dt*ddt
-    call dXdt(X+0.5d0*k1,ddt,r)
-    k2 = dt*ddt
-    call dXdt(X+0.5d0*k2,ddt,r)
-    k3 = dt*ddt
-    call dXdt(X+k3,ddt,r)
-    k4 = dt*ddt
-    
-    Xnp1_res = X + 1.d0/6.d0*k1 + &
-               1.d0/3.d0*k2 + 1.d0/3.d0*k3 + &
-                1.d0/6.d0*k4   
+    do i = 1, imax, 1
+		k1(i) = dt*ddt(i)
+	   	Xnp1_res(i) = X(i) + 0.5d0*k1(i) 
+	end do
+	call dXdt(Xnp1_res,ddt,r)
+    do i = 1, imax, 1
+		k2(i) = dt*ddt(i)
+		Xnp1_res(i) = X(i) + 0.5d0*k2(i) 
+	end do
+	call dXdt(Xnp1_res,ddt,r)
+    do i = 1, imax, 1
+		k3(i) = dt*ddt(i)
+		Xnp1_res(i) = X(i) + k3(i) 
+	end do
+	call dXdt(Xnp1_res,ddt,r)
+ 	do i = 1, imax, 1
+		k4(i) = dt*ddt(i) 
+	end do
+  
+	do i = 1, imax, 1
+    	Xnp1_res(i) = X(i) + 1.d0/6.d0*k1(i) + &
+               1.d0/3.d0*k2(i) + 1.d0/3.d0*k3(i) + &
+                1.d0/6.d0*k4(i)   
 
-
+	end do
 
 end subroutine Xnp1
 subroutine sys_params(sigma, b)
@@ -43,7 +56,7 @@ end subroutine sys_params
 subroutine dXdt(X,dXdt_res,r)
 	implicit none
 	double precision, dimension(3) :: X
-	double precision, intent(in) :: r
+	double precision :: r
 	double precision, intent(out), dimension(3) :: dXdt_res
 	double precision :: sigma, b
 	integer :: i
