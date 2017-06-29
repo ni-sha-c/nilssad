@@ -22,11 +22,6 @@
 
         integer, parameter :: shapeChange=0
 
-        integer :: max_deriv_vec_len
-        parameter ( max_deriv_vec_len = 100 )
-        integer :: oad_ctmp_i1, oad_ctmp_i2, oad_ctmp_i3, & 
-        oad_ctmp_i4, oad_ctmp_i5, oad_ctmp_i6, oad_ctmp_i7
-
         !
         ! active needs to be a sequence type
         !  with no initialization
@@ -37,7 +32,7 @@
           ! initialization does not work for active variables
           ! inside of common block, such as in boxmodel
           ! initialization is required for correct adjoint
-          real(w2f__8) , dimension(max_deriv_vec_len) :: d =0.0d0
+          real(w2f__8)  :: d =0.0d0
         end type
         interface saxpy
           module procedure saxpy_d0_a0_a0
@@ -218,154 +213,154 @@
           real(w2f__8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_l0_a0_a0(a,x,y)
           integer(kind=w2f__i8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_i0_a0_a0(a,x,y)
           integer(kind=w2f__i4), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_d0_a0_a1(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_d0_a1_a1(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_d0_a2_a2(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), dimension(:,:), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_d1_a0_a1(a,x,y)
           real(w2f__8), dimension(:), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a
-          end do
+          
+          
+            y%d=y%d+x%d*a
+          
         end subroutine
         subroutine saxpy_d1_a1_a1(a,x,y)
           real(w2f__8), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a
-          end do
+          
+          
+            y%d=y%d+x%d*a
+          
         end subroutine
         subroutine saxpy_l1_a1_a1(a,x,y)
           integer(kind=w2f__i8), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a
-          end do
+          
+          
+            y%d=y%d+x%d*a
+          
         end subroutine
         subroutine saxpy_i1_a1_a1(a,x,y)
           integer(kind=w2f__i4), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a
-          end do
+          
+          
+            y%d=y%d+x%d*a
+          
         end subroutine
         subroutine saxpy_a1_a1_a1(a,x,y)
           type(active), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a%v
-          end do
+          
+          
+            y%d=y%d+x%d*a%v
+          
         end subroutine
         subroutine saxpy_d2_a0_a2(a,x,y)
           real(w2f__8), dimension(:,:), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_d2_a2_a2(a,x,y)
           real(w2f__8), dimension(:,:), intent(in) :: a
           type(active), dimension(:,:), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_r0_a0_a0(a,x,y)
           real(w2f__4), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_r0_a1_a1(a,x,y)
           real(w2f__4), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_r1_a0_a1(a,x,y)
           real(w2f__4), dimension(:), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)*a
-          end do
+          
+          
+            y%d=y%d + x%d*a
+          
         end subroutine
         subroutine saxpy_r1_a1_a1(a,x,y)
           real(w2f__4), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i)+x%d(i)*a
-          end do
+          
+          
+            y%d=y%d+x%d*a
+          
         end subroutine
         !
         ! chain rule saxpy to be used in forward and reverse modes
@@ -377,136 +372,136 @@
           real(w2f__8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_l0_a0_a0(a,x,y)
           integer(kind=w2f__i8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_i0_a0_a0(a,x,y)
           integer(kind=w2f__i4), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d0_a0_a1(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d0_a0_a2(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)*a
-          end do
+          
+          
+            y%d = x%d*a
+          
         end subroutine
         subroutine sax_d0_a1_a1(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d0_a2_a2(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), dimension(:,:), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d0_a3_a3(a,x,y)
           real(w2f__8), intent(in) :: a
           type(active), dimension(:,:,:), intent(in) :: x
           type(active), dimension(:,:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d1_a0_a1(a,x,y)
           real(w2f__8), dimension(:), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d1_a1_a1(a,x,y)
           real(w2f__8), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_l1_a1_a1(a,x,y)
           integer(kind=w2f__i8), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_i1_a1_a1(a,x,y)
           integer(kind=w2f__i4), dimension(:), intent(in) :: a
           type(active), dimension(:), intent(in) :: x
           type(active), dimension(:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d2_a0_a2(a,x,y)
           real(w2f__8), dimension(:,:), intent(in) :: a
           type(active), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_d2_a2_a2(a,x,y)
           real(w2f__8), dimension(:,:), intent(in) :: a
           type(active), dimension(:,:), intent(in) :: x
           type(active), dimension(:,:), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         subroutine sax_r0_a0_a0(a,x,y)
           real(w2f__4), intent(in) :: a
           type(active), intent(in) :: x
           type(active), intent(inout) :: y
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=x%d(i)*a
-          end do
+          
+          
+            y%d=x%d*a
+          
         end subroutine
         !
         ! set derivative of y to be equal to derivative of x
@@ -516,50 +511,50 @@
         subroutine setderiv_a0_a0(y,x)
           type(active), intent(inout) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         subroutine setderiv_a1_a0(y,x)
           type(active), intent(inout), dimension(:) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         subroutine setderiv_a1_a1(y,x)
           type(active), intent(inout), dimension(:) :: y
           type(active), intent(in), dimension(:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         subroutine setderiv_a2_a0(y,x)
           type(active), intent(inout), dimension(:,:) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         subroutine setderiv_a2_a2(y,x)
           type(active), intent(inout), dimension(:,:) :: y
           type(active), intent(in), dimension(:,:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         subroutine setderiv_a3_a3(y,x)
           type(active), intent(inout), dimension(:,:,:) :: y
           type(active), intent(in), dimension(:,:,:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = x%d(i)
-          end do
+          
+          
+            y%d = x%d
+          
         end subroutine
         !
         ! set the derivative of y to be the negated derivative of x
@@ -570,19 +565,19 @@
         subroutine set_neg_deriv_a0_a0(y,x)
           type(active), intent(inout) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = -x%d(i)
-          end do
+          
+          
+            y%d = -x%d
+          
         end subroutine
 
         subroutine set_neg_deriv_a1_a1(y,x)
           type(active), intent(inout), dimension(:) :: y
           type(active), intent(in), dimension(:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i) = -x%d(i)
-          end do
+          
+          
+            y%d = -x%d
+          
         end subroutine
 
         !
@@ -594,28 +589,28 @@
         subroutine inc_deriv_a0_a0(y,x)
           type(active), intent(inout) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)
-          end do
+          
+          
+            y%d=y%d + x%d
+          
         end subroutine
 
         subroutine inc_deriv_a1_a1(y,x)
           type(active), intent(inout), dimension(:) :: y
           type(active), intent(in), dimension(:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)
-          end do
+          
+          
+            y%d=y%d + x%d
+          
         end subroutine
 
         subroutine inc_deriv_a2_a2(y,x)
           type(active), intent(inout), dimension(:,:) :: y
           type(active), intent(in), dimension(:,:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) + x%d(i)
-          end do
+          
+          
+            y%d=y%d + x%d
+          
         end subroutine
 
         !
@@ -627,28 +622,28 @@
         subroutine dec_deriv_a0_a0(y,x)
           type(active), intent(inout) :: y
           type(active), intent(in) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) - x%d(i)
-          end do
+          
+          
+            y%d=y%d - x%d
+          
         end subroutine
 
         subroutine dec_deriv_a1_a1(y,x)
           type(active), intent(inout), dimension(:) :: y
           type(active), intent(in), dimension(:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) - x%d(i)
-          end do
+          
+          
+            y%d=y%d - x%d
+          
         end subroutine
         
         subroutine dec_deriv_a2_a2(y,x)
           type(active), intent(inout), dimension(:,:) :: y
           type(active), intent(in), dimension(:,:) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-            y%d(i)=y%d(i) - x%d(i)
-          end do
+          
+          
+            y%d=y%d - x%d
+          
         end subroutine
         
         !
@@ -656,42 +651,42 @@
         !
         subroutine zero_deriv_a0(x)
           type(active), intent(inout) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-             x%d(i)=0.0d0
-          end do 
+          
+          
+             x%d=0.0d0
+           
         end subroutine
 
         subroutine zero_deriv_a1(x)
           type(active), dimension(:), intent(inout) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-             x%d(i)=0.0d0
-          end do 
+          
+          
+             x%d=0.0d0
+           
         end subroutine
 
         subroutine zero_deriv_a2(x)
           type(active), dimension(:,:), intent(inout) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-             x%d(i)=0.0d0
-          end do 
+          
+          
+             x%d=0.0d0
+           
         end subroutine
 
         subroutine zero_deriv_a3(x)
           type(active), dimension(:,:,:), intent(inout) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-             x%d(i)=0.0d0
-          end do 
+          
+          
+             x%d=0.0d0
+           
         end subroutine
 
         subroutine zero_deriv_a4(x)
           type(active), dimension(:,:,:,:), intent(inout) :: x
-          integer :: i
-          do i=1,max_deriv_vec_len
-             x%d(i)=0.0d0
-          end do 
+          
+          
+             x%d=0.0d0
+           
         end subroutine
 
         !

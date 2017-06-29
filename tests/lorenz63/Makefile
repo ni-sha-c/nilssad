@@ -5,8 +5,8 @@ ifndef CC
 CC=gcc
 endif
 RTSUPP=w2f__types OAD_active_custom OAD_cp OAD_tape OAD_rev   
-
-
+#RTSUPP=w2f__types OAD_active OAD_cp OAD_tape OAD_rev   
+#RTSUPP=w2f__types OAD_active  
 solver_h: $(addsuffix .o, $(RTSUPP)) \
 lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_homogeneous.o
 	${F90C} -o $@ $^
@@ -31,20 +31,20 @@ numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolCha
 
 toolChain : numCore.f90
 	openad -c -m rj $<
-	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCore.f90: Lorenz63.f90 head.prepped.f90
 	cat $^ > $@
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<
-	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
 numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 	cat $^ > $@
 
 toolChaini : numCorei.f90
-	openad -c -m f $<
+	openad -c -m rj $<
 	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 	cat OAD_active.f90 | sed 's/100/3/' > OAD_active_custom.f90	
 numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90

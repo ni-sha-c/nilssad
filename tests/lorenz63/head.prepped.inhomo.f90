@@ -21,10 +21,11 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 		call Xnp1(X,Xnp1_res,s)
 		X = Xnp1_res
 	end do
-	y = X 
-	!Let's differentiate v with respect to time
-
+	y(1) = 2.0*s
+	y(2) = 0.d0
+	y(3) = 0.d0
 !$openad DEPENDENT(y)
+
 end subroutine
 
 
