@@ -38,7 +38,7 @@ program driver
     Close(1)
 	Xorig = X0
 
-	Open(1, file="input_tangent.bin", form="unformatted", access="stream", &
+	Open(1, file="input_ihtangent.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
     Read(1) v0(:,1)
     Close(1)
@@ -59,8 +59,7 @@ program driver
 	end do
 
 	!check using tangent equation
-	X0 = X0 + v0(:,1)*5.d-3
-	v0 = 0.d0
+	X0 = Xorig
 	do t = 1, nSteps, 1
 		call rk45_full(X0,v0,v)
 		call Xnp1(X0,X1,x%v)
@@ -71,14 +70,16 @@ program driver
 	print *,'From the tangent equation = ', v
 
 	!check using finite difference
-	Xorig = Xorig + vorig(:,1)*5.d-3
-	v0 = 0.d0
+	X0 = Xorig
 	do t = 1, nSteps, 1
-		call rk45_full(X0,v0,v)
-		call Xnp1(Xorig,X1,x%v+0.005d0)
+		call Xnp1(Xorig,X1,x%v)
 		Xorig = X1
-		v0 = v
+	end do	
+	X0 = X0 + vorig(:,1)*5.d-3
+	do t = 1, nSteps, 1
+		call Xnp1(X0,X1,x%v+0.005d0)
+		X0 = X1
 	end do	
 
-	print *,'From finite difference = ', -1.d0*(X0-Xorig)/0.005d0
+	print *,'From finite difference = ', (X0-Xorig)/0.005d0
 end program driver

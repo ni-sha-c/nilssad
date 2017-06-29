@@ -14,9 +14,9 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 
 !$openad INDEPENDENT(s) 
 	ds = 5.d-3
-	X(1) = X0(1) + v0(1)*ds
-	X(2) = X0(2) + v0(2)*ds
-	X(3) = X0(3) + v0(3)*ds
+	X(1) = X0(1) + v0(1)*s
+	X(2) = X0(2) + v0(2)*s
+	X(3) = X0(3) + v0(3)*s
 	do t = 1, nSteps, 1
 		call Xnp1(X,Xnp1_res,s)
 		X(1) = Xnp1_res(1)
