@@ -1,4 +1,4 @@
-subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
+subroutine head_inhomogeneous(s,sprime,y,X0,v0,nSteps)
 	use Lorenz63
 	implicit none 
 	double precision, dimension(3) :: X
@@ -6,18 +6,15 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 	double precision, intent(in) :: s
 	double precision, dimension(3), intent(in) :: X0, v0
 	double precision, dimension(3), intent(out) :: y
-	integer :: t,sint
+	integer :: t
 	integer, intent(in) :: nSteps
-	double precision :: ds
+	double precision :: sprime
 
 
-	sint = int(s)
-	print *, sint
-	ds = sint - 5.d-3
 !$openad INDEPENDENT(s) 
-	X(1) = X0(1) + v0(1)*(s-ds)
-	X(2) = X0(2) + v0(2)*(s-ds)
-	X(3) = X0(3) + v0(3)*(s-ds)
+	X(1) = X0(1) + v0(1)*(s-sprime)
+	X(2) = X0(2) + v0(2)*(s-sprime)
+	X(3) = X0(3) + v0(3)*(s-sprime)
 	do t = 1, nSteps, 1
 		call Xnp1(X,Xnp1_res,s)
 		X(1) = Xnp1_res(1)

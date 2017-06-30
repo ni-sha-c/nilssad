@@ -8,7 +8,7 @@ program driver
     type(active), dimension(3) :: y
 	double precision, dimension(3) :: X0, X1, Xorig
 	double precision, dimension(3,1) :: v0,v, vorig
-	double precision :: dzds_t
+	double precision :: dzds_t, xprime
 	integer :: t, nSteps
 	double precision :: zs, z0, ds
 	character(len=128) :: arg
@@ -46,12 +46,13 @@ program driver
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) x%v
+    Read(1) xprime
     Close(1)
-
+	x%v = xprime
+	xprime = xprime - 5.d-3
 
 	
-	call head_inhomogeneous(x,y,X0,v0,nSteps)
+	call head_inhomogeneous(x,xprime,y,X0,v0,nSteps)
 		
 	print *, 's =',x%v
 	do t = 1, 3, 1
