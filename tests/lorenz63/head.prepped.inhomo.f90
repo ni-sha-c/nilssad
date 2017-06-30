@@ -6,17 +6,18 @@ subroutine head_inhomogeneous(s,y,X0,v0,nSteps)
 	double precision, intent(in) :: s
 	double precision, dimension(3), intent(in) :: X0, v0
 	double precision, dimension(3), intent(out) :: y
-	integer :: t
+	integer :: t,sint
 	integer, intent(in) :: nSteps
 	double precision :: ds
 
 
-
+	sint = int(s)
+	print *, sint
+	ds = sint - 5.d-3
 !$openad INDEPENDENT(s) 
-	ds = 5.d-3
-	X(1) = X0(1) + v0(1)*s
-	X(2) = X0(2) + v0(2)*s
-	X(3) = X0(3) + v0(3)*s
+	X(1) = X0(1) + v0(1)*(s-ds)
+	X(2) = X0(2) + v0(2)*(s-ds)
+	X(3) = X0(3) + v0(3)*(s-ds)
 	do t = 1, nSteps, 1
 		call Xnp1(X,Xnp1_res,s)
 		X(1) = Xnp1_res(1)
