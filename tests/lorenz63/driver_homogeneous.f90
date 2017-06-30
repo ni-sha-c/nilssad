@@ -8,9 +8,8 @@ program driver
     type(active), dimension(3) :: y
 	double precision, dimension(3) :: X0, X1, Xorig
 	double precision, dimension(3,1) :: v0,v, vorig
-	double precision :: dzds_t
 	integer :: t, nSteps
-	double precision :: zs, z0, ds
+	double precision :: s
 	character(len=128) :: arg
 
 
@@ -38,7 +37,7 @@ program driver
     Close(1)
 	Xorig = X0
 
-	Open(1, file="input_tangent.bin", form="unformatted", access="stream", &
+	Open(1, file="input_htangents.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
     Read(1) v0(:,1)
     Close(1)
@@ -46,14 +45,14 @@ program driver
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) x%v
+    Read(1) s
     Close(1)
 
 
-	
-	call head_homogeneous(x,y,X0,v0,nSteps)
+	x%v = 1.d-4	
+	call head_homogeneous(x,s,y,X0,v0,nSteps)
 		
-	print *, 's =',x%v
+	print *, 's =',s
 	do t = 1, 3, 1
 		print *, 'dy/dx at position ', t, 'is ',  x%d(t)
 	end do

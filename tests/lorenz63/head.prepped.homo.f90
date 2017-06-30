@@ -1,4 +1,4 @@
-subroutine head_homogeneous(s,y,X0,v0,nSteps)
+subroutine head_homogeneous(ds,s,y,X0,v0,nSteps)
 	use Lorenz63
 	implicit none 
 	double precision, dimension(3) :: X
@@ -8,11 +8,11 @@ subroutine head_homogeneous(s,y,X0,v0,nSteps)
 	double precision, dimension(3), intent(out) :: y
 	integer :: t
 	integer, intent(in) :: nSteps
-	double precision :: ds
+	double precision, intent(in) :: ds
 
 
 
-!$openad INDEPENDENT(s) 
+!$openad INDEPENDENT(ds) 
 	ds = 5.d-3
 	X(1) = X0(1) + v0(1)*ds
 	X(2) = X0(2) + v0(2)*ds
