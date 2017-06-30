@@ -9,7 +9,7 @@ program driver
 	double precision, dimension(3) :: X0, X1, Xorig
 	double precision, dimension(3,1) :: v0,v,vorig
 	integer :: t, nSteps
-	double precision :: s, eps
+	double precision :: s
 	character(len=128) :: arg
 
 
@@ -48,35 +48,13 @@ program driver
     Close(1)
 
 
-	x%v = 1.d-4
-	eps = 1.d-4	
+	x%v = 1.d-4	
 	call head_homogeneous(x,s,y,X0,v0,nSteps)
+
+	Open(1, file="output_htangents.bin", form="unformatted", access="stream", &
+         status='replace', convert='big_endian')
+    Write(1) x%d
+    Close(1)
 		
-	print *, 's =',s
-	print *, 'From AD = '
-	do t = 1, 3, 1
-		print *, x%d(t)
-	end do
 
-	!check using tangent equation
-	X0 = X0 + v0(:,1)*eps
-	do t = 1, nSteps, 1
-		call rk45_full(X0,v0,v)
-		call Xnp1(X0,X1,s)
-		X0 = X1
-		v0 = v
-	end do	
-
-	
-
-	!check using finite difference
-	do t = 1, nSteps, 1
-		call rk45_full(Xorig,vorig,v)
-		call Xnp1(Xorig,X1,s)
-		Xorig = X1
-		vorig = v
-	end do	
-
-	print *,'From finite difference = ', (X0-Xorig)/eps
-	print *,'From the tangent equation = ', v0-vorig
 end program driver
