@@ -38,7 +38,8 @@ numCore.f90: Lorenz63.f90 head.prepped.f90
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<
-	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	cat OAD_active.f90 | sed 's/100/3/' > OAD_active_custom.f90		
 
 numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 	cat $^ > $@

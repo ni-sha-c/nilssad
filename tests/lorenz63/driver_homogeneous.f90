@@ -7,13 +7,12 @@ program driver
 	type(active) :: x
     type(active), dimension(3) :: y
 	double precision, dimension(3) :: X0, X1, Xorig
-	double precision, dimension(3,1) :: v0,v, vorig
+	double precision, dimension(3,1) :: v0,v,vorig
 	integer :: t, nSteps
 	double precision :: s
 	character(len=128) :: arg
 
 
-	ds = 0.005d0
 	y(1)%d = [1.d0, 0.d0, 0.d0]
 	y(2)%d = [0.d0, 1.d0,0.d0]
 	y(3)%d = [0.d0, 0.d0,1.d0]
@@ -41,7 +40,7 @@ program driver
             status="old", convert='big_endian')
     Read(1) v0(:,1)
     Close(1)
-	vorig = v0
+	vorig = v	
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
@@ -59,25 +58,23 @@ program driver
 
 	!check using tangent equation
 	X0 = X0 + v0(:,1)*5.d-3
-	v0 = 0.d0
 	do t = 1, nSteps, 1
 		call rk45_full(X0,v0,v)
-		call Xnp1(X0,X1,x%v)
+		call Xnp1(X0,X1,s)
 		X0 = X1
 		v0 = v
 	end do	
 
-	print *,'From the tangent equation = ', v
+	
 
 	!check using finite difference
-	Xorig = Xorig + vorig(:,1)*5.d-3
-	v0 = 0.d0
 	do t = 1, nSteps, 1
-		call rk45_full(X0,v0,v)
-		call Xnp1(Xorig,X1,x%v+0.005d0)
+		call rk45_full(Xorig,vorig,v)
+		call Xnp1(Xorig,X1,s)
 		Xorig = X1
-		v0 = v
+		vorig = v
 	end do	
 
 	print *,'From finite difference = ', -1.d0*(X0-Xorig)/0.005d0
+	print *,'From the tangent equation = ', v0-vorig
 end program driver
