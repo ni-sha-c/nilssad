@@ -7,6 +7,8 @@ endif
 RTSUPP=w2f__types OAD_active_custom OAD_cp OAD_tape OAD_rev   
 #RTSUPP=w2f__types OAD_active OAD_cp OAD_tape OAD_rev   
 #RTSUPP=w2f__types OAD_active  
+
+#Tests
 solver_h_test: $(addsuffix .o, $(RTSUPP)) \
 lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_homogeneous.o
 	${F90C} -o $@ $^
@@ -15,10 +17,20 @@ solver_i_test: $(addsuffix .o, $(RTSUPP)) \ \
 lorenz63_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_inhomogeneous.o
 	${F90C} -o $@ $^
 
-
 driver: $(addsuffix .o, $(RTSUPP)) \  \
 lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver.o
 	${F90C} -o $@ $^
+
+
+#Interface with nilss
+solver_ht: $(addsuffix .o, $(RTSUPP)) \
+lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss.o
+	${F90C} -o $@ $^
+
+solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
+lorenz63_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
+	${F90C} -o $@ $^
+
 
 
 

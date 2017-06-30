@@ -54,33 +54,11 @@ program driver
 	
 	call head_inhomogeneous(x,xprime,y,X0,v0,nSteps)
 		
-	print *, 's =',x%v
-	do t = 1, 3, 1
-		print *, 'dy/dx at position ', t, 'is ',  x%d(t)
-	end do
+	Open(1, file="output_ihtangent.bin", form="unformatted", access="stream", &
+         status='replace', convert='big_endian')
+    Write(1) x%d
+    Close(1)
 
-	!check using tangent equation
-	X0 = Xorig
-	do t = 1, nSteps, 1
-		call rk45_full(X0,v0,v)
-		call Xnp1(X0,X1,x%v)
-		X0 = X1
-		v0 = v
-	end do	
 
-	print *,'From the tangent equation = ', v
 
-	!check using finite difference
-	X0 = Xorig
-	do t = 1, nSteps, 1
-		call Xnp1(Xorig,X1,x%v)
-		Xorig = X1
-	end do	
-	X0 = X0 + vorig(:,1)*5.d-3
-	do t = 1, nSteps, 1
-		call Xnp1(X0,X1,x%v+0.005d0)
-		X0 = X1
-	end do	
-
-	print *,'From finite difference = ', (X0-Xorig)/0.005d0
 end program driver

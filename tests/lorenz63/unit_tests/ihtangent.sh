@@ -1,4 +1,4 @@
 cd ..
 make clean
-make solver_i
-./solver_i 100
+make solver_i_test
+./solver_i_test 100

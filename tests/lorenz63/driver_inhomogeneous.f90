@@ -8,9 +8,9 @@ program driver
     type(active), dimension(3) :: y
 	double precision, dimension(3) :: X0, X1, Xorig
 	double precision, dimension(3,1) :: v0,v, vorig
-	double precision :: dzds_t, xprime
+	double precision :: xprime
 	integer :: t, nSteps
-	double precision :: zs, z0, ds
+	double precision :: ds
 	character(len=128) :: arg
 
 
@@ -49,14 +49,15 @@ program driver
     Read(1) xprime
     Close(1)
 	x%v = xprime
-	xprime = xprime - 5.d-3
+	xprime = xprime - ds
 
 	
 	call head_inhomogeneous(x,xprime,y,X0,v0,nSteps)
 		
 	print *, 's =',x%v
+	print *, 'From AD = '
 	do t = 1, 3, 1
-		print *, 'dy/dx at position ', t, 'is ',  x%d(t)
+		print *, x%d(t)
 	end do
 
 	!check using tangent equation
@@ -78,9 +79,9 @@ program driver
 	end do	
 	X0 = X0 + vorig(:,1)*5.d-3
 	do t = 1, nSteps, 1
-		call Xnp1(X0,X1,x%v+0.005d0)
+		call Xnp1(X0,X1,x%v+ds)
 		X0 = X1
 	end do	
 
-	print *,'From finite difference = ', (X0-Xorig)/0.005d0
+	print *,'From finite difference = ', (X0-Xorig)/ds
 end program driver
