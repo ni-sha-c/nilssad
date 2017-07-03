@@ -14,7 +14,7 @@ subroutine Xnp1(X,Xnp1_res,r)
 	double precision :: dt
 	double precision :: r
 	
-	dt = 0.005d0
+	dt = 0.001d0
 	imax = size(X)
 	
     call dXdt(X,ddt,r)
@@ -60,12 +60,10 @@ subroutine dXdt(X,dXdt_res,r)
 	double precision, intent(out), dimension(3) :: dXdt_res
 	double precision :: sigma, b
 	integer :: i
-	double precision :: dt
-    
-    dt = 0.005d0
+
 	call sys_params(sigma,b) 	
 	dXdt_res(1) = -sigma*X(1) + sigma*X(2)
-	dXdt_res(2) = X(1)*(r-X(3)) - X(2)
+	dXdt_res(2) = X(1)*(r + 28.d0 -X(3)) - X(2)
 	dXdt_res(3) = X(1)*X(2) - b*X(3)  
         
 end subroutine dXdt

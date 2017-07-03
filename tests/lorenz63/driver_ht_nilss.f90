@@ -90,8 +90,8 @@ program driver
 			Xtemp2 = X1
 		end do	
 
-		!print *, "From AD: ", x(t)%d
-		!print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
+		print *, "From AD: ", x(t)%d
+		print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
 
 
 

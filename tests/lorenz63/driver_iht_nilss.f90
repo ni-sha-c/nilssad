@@ -61,19 +61,19 @@ program driver
     Write(1) x%d
     Close(1)
 
-	!check using finite difference
-	!Xtemp1 = Xorig
-	!do t = 1, nSteps, 1
-	!	call Xnp1(Xtemp1, X1, x%v)
-	!	Xtemp1 = X1
-	!end do
-	!Xtemp2 = Xorig + vorig(:,1)*ds 
-	!do t = 1, nSteps, 1
-	!	call Xnp1(Xtemp2, X1, x%v+ds)
-	!	Xtemp2 = X1
-	!end do
-	!print *, "From FD: ", (Xtemp2-Xtemp1)/ds
-	!print *, "From AD: ", x%d
+	check using finite difference
+	Xtemp1 = Xorig
+	do t = 1, nSteps, 1
+		call Xnp1(Xtemp1, X1, x%v)
+		Xtemp1 = X1
+	end do
+	Xtemp2 = Xorig + vorig(:,1)*ds 
+	do t = 1, nSteps, 1
+		call Xnp1(Xtemp2, X1, x%v+ds)
+		Xtemp2 = X1
+	end do
+	print *, "From FD: ", (Xtemp2-Xtemp1)/ds
+	print *, "From AD: ", x%d
 
 
 end program driver
