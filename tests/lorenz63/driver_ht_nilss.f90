@@ -4,30 +4,30 @@ program driver
 	use lorenz63_passive
 	implicit none 
 	external head_homogeneous
-	type(active) :: x
-    type(active), dimension(3) :: y
-	double precision, dimension(3) :: X0, X1, Xorig
-	double precision, dimension(3,1) :: v0,v,vorig
-	integer :: t, nSteps
-	double precision :: s
-	character(len=128) :: arg
+	integer, parameter:: d=3
+	type(active), dimension(:), allocatable :: x
+    type(active), dimension(:,:), allocatable :: y
+	double precision, dimension(d) :: X0, X1, Xorig, vtemp, Xtemp1, Xtemp2
+	double precision, dimension(:,:), allocatable :: v0,v,vorig
+	integer :: t, nSteps, subspace_dimension, t1, t2
+	double precision :: s, eps
+	character(len=128) :: arg1, arg2
 
 
-	y(1)%d = [1.d0, 0.d0, 0.d0]
-	y(2)%d = [0.d0, 1.d0,0.d0]
-	y(3)%d = [0.d0, 0.d0,1.d0]
 	our_rev_mode%tape=.TRUE.
-
+	eps = 1.d-4
 
 	
-	if (command_argument_count() .ne. 1) then
-        print *, "Need number of time steps"
+	if (command_argument_count() .ne. 2) then
+        print *, "Need number of time steps and subspace dimension"
         call exit(-1)
     end if
 
-	call get_command_argument(1, arg)
-    Read(arg, '(i10)') nSteps
+	call get_command_argument(1, arg1)
+    Read(arg1, '(i10)') nSteps
 
+	call get_command_argument(2, arg2)
+    Read(arg2, '(i10)') subspace_dimension
 
 
 	Open(1, file="input_primal.bin", form="unformatted", access="stream", &
@@ -36,11 +36,24 @@ program driver
     Close(1)
 	Xorig = X0
 
+
+	
+		
+	allocate(v0(d,subspace_dimension))
+	allocate(vorig(d,subspace_dimension))
+	allocate(v(d,subspace_dimension))
+
+	allocate(y(d,subspace_dimension))
+	allocate(x(subspace_dimension))
+	
 	Open(1, file="input_htangents.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) v0(:,1)
-    Close(1)
-	vorig = v	
+    do t = 1, subspace_dimension, 1
+		Read(1) v0(:,t)		
+    end do
+	Close(1)
+	vorig = v0
+
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
@@ -48,12 +61,26 @@ program driver
     Close(1)
 
 
-	x%v = 1.d-4	
-	call head_homogeneous(x,s,y,X0,v0,nSteps)
-
+		
 	Open(1, file="output_htangents.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
-    Write(1) x%d
+	
+
+	
+	do t = 1, subspace_dimension, 1
+		do t2 = 1, d, 1
+			y(t2,t)%d = 0.d0
+			y(t2,t)%d(t2) = 1.d0
+		end do
+		x(t)%v = eps
+		
+
+		call head_homogeneous(x(t)%v,s,y(:,t),X0,v0(:,t),nSteps)
+
+		Write(1) x(t)%d		
+
+
+	end do
     Close(1)
 		
 
