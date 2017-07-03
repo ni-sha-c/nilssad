@@ -5,7 +5,7 @@ def trapez_mean(J, dim):
     J_m1 = 2 * J[0] - J[1]
     return (J.sum(0) + J[:-1].sum(0) + J_m1) / (2 * J.shape[0])
 
-def run_segment(run, u0, V, v, parameter, i_segment, steps,
+def run_segment(run, run_ht, run_iht, u0, V, v, parameter, i_segment, steps,
                 epsilon):
 	'''
 	Run Time Segement i_segment, starting from
@@ -30,10 +30,13 @@ def run_segment(run, u0, V, v, parameter, i_segment, steps,
 		u1h.append(u0 + V[j] * epsilon)
 
 	res_0 = run(u0, parameter, steps)
-		
 	for j in range(subspace_dimension):
-		res_h.append(run_ht(u1h[j], parameter, steps))
-    
+		res_h.append(run(u1h[j], parameter, steps))
+
+
+	res_iad = run_iht(u0, v, parameter, steps)
+	res_had = run_ht(u0, V, parameter, subspace_dimension, steps)		
+	print(res_had) 
 	# run inhomogeneous tangent
 	res_i = run(u1i, parameter + epsilon, steps)
 	J0 = res_0[1]
@@ -41,14 +44,15 @@ def run_segment(run, u0, V, v, parameter, i_segment, steps,
     
 	# get homogeneous tangents
 	G = []
-	V = np.random.rand(subspace_dimension,len(u0))
+	total_dimension = len(u0)
+	V = np.random.rand(subspace_dimension,total_dimension)
 	for j in range(subspace_dimension):
 		J1 = res_h[j][1]
 		u1p = res_h[j][0]
-		V[j] = (u1p - u0p) / epsilon
+		V[j] = res_had[total_dimension*j:total_dimension*(j+1)]
 		G.append(trapez_mean((J1 - J0) / epsilon, 0))
 	# get inhomogeneous tangent
 	J1 = res_i[1]
 	u1p = res_i[0]
-	v, g = (u1p - u0p) / epsilon, trapez_mean((J1 - J0) / epsilon,0)
+	v, g = res_iad, trapez_mean((J1 - J0) / epsilon,0)
 	return u0p, V, v, J0, G, g

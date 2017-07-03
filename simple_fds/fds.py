@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
 
 from .timedilation import TimeDilation, TimeDilationExact
-from .segment import run_segment, trapez_mean
+from .segment_AD import run_segment, trapez_mean
 from .lsstan import LssTangent#, tangent_initial_condition
 from .timeseries import windowed_mean
 # ---------------------------------------------------------------------------- #
