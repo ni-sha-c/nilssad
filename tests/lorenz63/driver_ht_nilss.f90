@@ -7,7 +7,7 @@ program driver
 	integer, parameter:: d=3
 	type(active), dimension(:), allocatable :: x
     type(active), dimension(:,:), allocatable :: y
-	double precision, dimension(d) :: X0, X1, Xorig, vtemp, Xtemp1, Xtemp2
+	double precision, dimension(d) :: X0, X1, Xorig, Xtemp1, Xtemp2
 	double precision, dimension(:,:), allocatable :: v0,v,vorig
 	integer :: t, nSteps, subspace_dimension, t1, t2
 	double precision :: s, eps
@@ -65,7 +65,12 @@ program driver
 	Open(1, file="output_htangents.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
 	
-
+	Xtemp1 = Xorig
+	do t = 1, nSteps, 1
+		call Xnp1(Xtemp1,X1,s)
+		Xtemp1 = X1
+	end do	
+ 
 	
 	do t = 1, subspace_dimension, 1
 		do t2 = 1, d, 1
@@ -78,6 +83,16 @@ program driver
 		call head_homogeneous(x(t)%v,s,y(:,t),X0,v0(:,t),nSteps)
 
 		Write(1) x(t)%d		
+
+		Xtemp2 = Xorig + eps*v0(:,t)
+		do t2 = 1, nSteps, 1
+			call Xnp1(Xtemp2,X1,s)
+			Xtemp2 = X1
+		end do	
+
+		!print *, "From AD: ", x(t)%d
+		!print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
+
 
 
 	end do

@@ -11,9 +11,11 @@ sys.path.append(os.path.join(my_path, '..'))
 #reload(simple_fds)
 from simple_fds import *
 
-solver_path = os.path.join(my_path, 'lorenz')
+solver_path = os.path.join(my_path, 'lorenz63')
 solver = os.path.join(solver_path, 'solver')
 u0 = loadtxt(os.path.join(solver_path, 'u0'))
+solver_ht = os.path.join(solver_path, 'solver_ht')
+solver_iht = os.path.join(solver_path, 'solver_iht')
 
 def solve(u, s, nsteps):
     tmp_path = tempfile.mkdtemp()
@@ -29,6 +31,43 @@ def solve(u, s, nsteps):
     shutil.rmtree(tmp_path)
     J = transpose([J, 100 * ones(J.size)])
     return out, J
+
+def solve_ht(u, v, s, sd, nsteps):
+    tmp_path = tempfile.mkdtemp()
+    with open(os.path.join(tmp_path, 'input_primal.bin'), 'wb') as f:
+        f.write(asarray(u, dtype='>d').tobytes())
+    with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
+        f.write(asarray(s, dtype='>d').tobytes())
+    with open(os.path.join(tmp_path, 'input_htangents.bin'), 'wb') as f:
+        f.write(asarray(v, dtype='>d').tobytes())
+
+
+    call([solver_ht, str(int(nsteps)), str(int(sd))], cwd=tmp_path)
+
+    with open(os.path.join(tmp_path, 'output_htangents.bin'), 'rb') as f:
+        out = frombuffer(f.read(), dtype='>d')
+    shutil.rmtree(tmp_path)
+    return out
+
+
+def solve_iht(u, v, s, nsteps):
+    tmp_path = tempfile.mkdtemp()
+    with open(os.path.join(tmp_path, 'input_primal.bin'), 'wb') as f:
+        f.write(asarray(u, dtype='>d').tobytes())
+    with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
+        f.write(asarray(s, dtype='>d').tobytes())
+    with open(os.path.join(tmp_path, 'input_ihtangent.bin'), 'wb') as f:
+        f.write(asarray(v, dtype='>d').tobytes())
+
+
+    call([solver_iht, str(int(nsteps))], cwd=tmp_path)
+
+    with open(os.path.join(tmp_path, 'output_ihtangent.bin'), 'rb') as f:
+        out = frombuffer(f.read(), dtype='>d')
+    shutil.rmtree(tmp_path)
+    return out
+
+
 
 ##if __name__ == '__main__':
 def test_gradient():

@@ -4,20 +4,22 @@ program driver
 	use lorenz63_passive
 	implicit none 
 	external head_inhomogeneous
+	integer, parameter:: d=3
 	type(active) :: x
-    type(active), dimension(3) :: y
-	double precision, dimension(3) :: X0, X1, Xorig
-	double precision, dimension(3,1) :: v0,v, vorig
+    type(active), dimension(d) :: y
+	double precision, dimension(d) :: X0, X1, Xorig
+	double precision, dimension(d,1) :: v0,v, vorig
 	double precision :: dzds_t, xprime
 	integer :: t, nSteps
-	double precision :: zs, z0, ds
+	double precision :: ds
 	character(len=128) :: arg
 
 
 	ds = 0.005d0
-	y(1)%d = [1.d0, 0.d0, 0.d0]
-	y(2)%d = [0.d0, 1.d0,0.d0]
-	y(3)%d = [0.d0, 0.d0,1.d0]
+	do t = 1, d, 1
+		y(t)%d = 0.d0
+		y(t)%d(t) = 1.d0
+	end do
 	our_rev_mode%tape=.TRUE.
 
 
@@ -49,7 +51,7 @@ program driver
     Read(1) xprime
     Close(1)
 	x%v = xprime
-	xprime = xprime - 5.d-3
+	xprime = xprime - ds
 
 	
 	call head_inhomogeneous(x,xprime,y,X0,v0,nSteps)
