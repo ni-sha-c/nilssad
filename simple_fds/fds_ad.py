@@ -6,7 +6,7 @@ from copy import deepcopy
 import numpy as np
 
 from .timedilation import TimeDilation, TimeDilationExact
-from .segment import run_segment, trapez_mean
+from .segment_ad import run_segment, trapez_mean
 from .lsstan import LssTangent#, tangent_initial_condition
 from .timeseries import windowed_mean
 # ---------------------------------------------------------------------------- #
@@ -53,7 +53,7 @@ class RunWrapper:
         return u1, np.array(J).reshape([steps, -1])
       
 def continue_shadowing(
-        run, parameter,
+        run, run_ht, run_iht, parameter,
         num_segments, steps_per_segment, V, v, u0, lss, epsilon=1E-6):
     """
     """
@@ -74,7 +74,7 @@ def continue_shadowing(
     v = time_dil.project(v)
 
     u0, V, v, J0, G, g = run_segment(
-            run, u0, V, v, parameter, i, steps_per_segment,
+            run, run_ht, run_iht, u0, V, v, parameter, i, steps_per_segment,
             epsilon)
 
     J_hist.append(J0)
@@ -95,7 +95,7 @@ def continue_shadowing(
         # run all segments
         if i < num_segments:
             u0, V, v, J0, G, g = run_segment(
-                    run, u0, V, v, parameter, i, steps_per_segment,
+                    run, run_ht, run_iht, u0, V, v, parameter, i, steps_per_segment,
                     epsilon)
 
        
@@ -108,7 +108,7 @@ def continue_shadowing(
     return np.array(J_hist).mean((0,1)), G
 
 def shadowing(
-        run, u0, parameter, subspace_dimension, num_segments,
+        run, run_ht, run_iht, u0, parameter, subspace_dimension, num_segments,
         steps_per_segment, runup_steps, epsilon=1E-6):
     '''
     run: a function in the form
@@ -134,5 +134,5 @@ def shadowing(
     V, v = tangent_initial_condition(subspace_dimension,total_dimension)
     lss = LssTangent()
     return continue_shadowing(
-            run, parameter,
+            run, run_ht, run_iht, parameter,
             num_segments, steps_per_segment, V, v, u0, lss, epsilon)

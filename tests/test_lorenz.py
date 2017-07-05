@@ -12,19 +12,19 @@ sys.path.append(os.path.join(my_path, '..'))
 from simple_fds import *
 
 solver_path = os.path.join(my_path, 'lorenz63')
-solver = os.path.join(solver_path, 'solver')
+solver = os.path.join(solver_path, 'solver_primal')
 u0 = loadtxt(os.path.join(solver_path, 'u0'))
 solver_ht = os.path.join(solver_path, 'solver_ht')
 solver_iht = os.path.join(solver_path, 'solver_iht')
 
 def solve(u, s, nsteps):
     tmp_path = tempfile.mkdtemp()
-    with open(os.path.join(tmp_path, 'input.bin'), 'wb') as f:
+    with open(os.path.join(tmp_path, 'input_primal.bin'), 'wb') as f:
         f.write(asarray(u, dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
         f.write(asarray(s, dtype='>d').tobytes())
     call([solver, str(int(nsteps))], cwd=tmp_path)
-    with open(os.path.join(tmp_path, 'output.bin'), 'rb') as f:
+    with open(os.path.join(tmp_path, 'output_primal.bin'), 'rb') as f:
         out = frombuffer(f.read(), dtype='>d')
     with open(os.path.join(tmp_path, 'objective.bin'), 'rb') as f:
         J = frombuffer(f.read(), dtype='>d')
@@ -75,7 +75,7 @@ def test_gradient():
     J, G = zeros([s.size, 2]), zeros([s.size, 2])
     for i, si in enumerate(s):
         print(i)
-        Ji, Gi = shadowing(solve, u0, si-28, 2, 10, 1000, 5000)
+        Ji, Gi = shadowing(solve, solve_ht, solve_iht, u0, si-28, 2, 10, 1000, 5000)
         J[i,:] = Ji
         G[i,:] = Gi
     assert all(abs(J[:,1] - 100) < 1E-12)

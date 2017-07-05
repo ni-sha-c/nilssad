@@ -64,11 +64,11 @@ program driver
 	Open(1, file="output_htangents.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
 	
-	Xtemp1 = Xorig
-	do t = 1, nSteps, 1
-		call Xnp1(Xtemp1,X1,s)
-		Xtemp1 = X1
-	end do	
+	!Xtemp1 = Xorig
+	!do t = 1, nSteps, 1
+	!	call Xnp1(Xtemp1,X1,s)
+	!	Xtemp1 = X1
+	!end do	
  
 	
 	do t = 1, subspace_dimension, 1
@@ -83,14 +83,14 @@ program driver
 
 		Write(1) x(t)%d		
 
-		Xtemp2 = Xorig + eps*v0(:,t)
-		do t2 = 1, nSteps, 1
-			call Xnp1(Xtemp2,X1,s)
-			Xtemp2 = X1
-		end do	
+		!Xtemp2 = Xorig + eps*v0(:,t)
+		!do t2 = 1, nSteps, 1
+		!		call Xnp1(Xtemp2,X1,s)
+		!	Xtemp2 = X1
+		!end do	
 
-		print *, "From AD: ", x(t)%d
-		print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
+		!print *, "From AD: ", x(t)%d
+		!print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
 
 
 
