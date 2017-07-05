@@ -1,20 +1,22 @@
 ! Lorenz ' 63 system
 
 module Lorenz63
-	
+	implicit none
+
+	double precision, parameter :: dt = 0.001d0
+	integer, parameter :: d = 3	
+
 contains
 
 subroutine Xnp1(X,Xnp1_res,r)
 
 	implicit none
-	double precision, dimension(3):: X, Xnp1_res
-    double precision, dimension(3):: k1, k2, k3, k4
-	double precision, dimension(3):: ddt
+	double precision, dimension(d):: X, Xnp1_res
+    double precision, dimension(d):: k1, k2, k3, k4
+	double precision, dimension(d):: ddt
 	integer :: i, imax
-	double precision :: dt
 	double precision :: r
 	
-	dt = 0.001d0
 	imax = size(X)
 	
     call dXdt(X,ddt,r)
@@ -55,9 +57,9 @@ subroutine sys_params(sigma, b)
 end subroutine sys_params
 subroutine dXdt(X,dXdt_res,r)
 	implicit none
-	double precision, dimension(3) :: X
+	double precision, dimension(d) :: X
 	double precision :: r
-	double precision, intent(out), dimension(3) :: dXdt_res
+	double precision, intent(out), dimension(d) :: dXdt_res
 	double precision :: sigma, b
 	integer :: i
 
@@ -67,11 +69,20 @@ subroutine dXdt(X,dXdt_res,r)
 	dXdt_res(3) = X(1)*X(2) - b*X(3)  
         
 end subroutine dXdt
+subroutine Objective(X,J,s)
+	implicit none
+	double precision, intent(in), dimension(d) :: X
+	double precision, intent(out) :: J
+	double precision, intent(in) :: s
+	
+	J = (X(3) - 28.d0)**2.0
+
+end subroutine Objective
 subroutine dfdX(X,dfdX_res)
 
 	implicit none
-	double precision, dimension(3) :: X
-	double precision, intent(out), dimension(3,3) :: dfdX_res 	
+	double precision, dimension(d) :: X
+	double precision, intent(out), dimension(d,d) :: dfdX_res 	
 	integer :: i,j
 	double precision:: sigma,b,r
 
@@ -95,16 +106,16 @@ end subroutine dfdX
 subroutine dvdt(X,v1,dvdt_res)
 
 		implicit none
-		double precision, dimension(3) :: X
-		double precision, intent(out), dimension(3,1) :: dvdt_res
-		double precision, dimension(3,3) :: dfdX_res
-		double precision, dimension(3,1) :: v1
-		double precision, dimension(3,1):: dfdX_times_v
+		double precision, dimension(d) :: X
+		double precision, intent(out), dimension(d,1) :: dvdt_res
+		double precision, dimension(d,d) :: dfdX_res
+		double precision, dimension(d,1) :: v1
+		double precision, dimension(d,1):: dfdX_times_v
 		integer :: i		
 	
 		call dfdX(X,dfdX_res)
 		!Manual matrix-vector product
-		do i = 1,3,1
+		do i = 1,d,1
 			dvdt_res(i,1) = dfdX_res(i,1)*v1(1,1) + dfdX_res(i,2)*v1(2,1) + dfdX_res(i,3)*v1(3,1)
 		end do
 		dvdt_res(1,1) = dvdt_res(1,1) + 0.d0
@@ -115,16 +126,12 @@ end subroutine dvdt
 subroutine rk45_full(X,v,vnp1)
 !Assumes full perturbation vector.
 	implicit none
-	double precision , dimension(3) :: X
-	double precision , intent(out), dimension(3,1) :: vnp1
-	double precision , dimension(3,1) :: v
-	double precision , dimension(3,1) :: v1,k1,k2,k3,k4
-	double precision , dimension(3,1):: dvdt_res
-	double precision :: dt
+	double precision , dimension(d) :: X
+	double precision , intent(out), dimension(d,1) :: vnp1
+	double precision , dimension(d,1) :: v
+	double precision , dimension(d,1) :: v1,k1,k2,k3,k4
+	double precision , dimension(d,1):: dvdt_res
 
-    
-
-	dt = 0.005d0	
 	v1 = v
 	call dvdt(X,v1,dvdt_res)	
 	k1 = dt*dvdt_res

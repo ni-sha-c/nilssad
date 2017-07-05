@@ -4,7 +4,6 @@ program driver
 	use lorenz63_passive
 	implicit none 
 	external head_inhomogeneous
-	integer, parameter:: d=3
 	type(active) :: x
     type(active), dimension(d) :: y
 	double precision, dimension(d) :: X0, X1, Xorig, Xtemp1, Xtemp2
@@ -61,7 +60,7 @@ program driver
     Write(1) x%d
     Close(1)
 
-	check using finite difference
+	!check using finite difference
 	Xtemp1 = Xorig
 	do t = 1, nSteps, 1
 		call Xnp1(Xtemp1, X1, x%v)

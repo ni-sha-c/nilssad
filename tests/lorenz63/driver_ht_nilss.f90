@@ -4,7 +4,6 @@ program driver
 	use lorenz63_passive
 	implicit none 
 	external head_homogeneous
-	integer, parameter:: d=3
 	type(active), dimension(:), allocatable :: x
     type(active), dimension(:,:), allocatable :: y
 	double precision, dimension(d) :: X0, X1, Xorig, Xtemp1, Xtemp2
