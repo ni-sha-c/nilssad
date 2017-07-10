@@ -4,7 +4,7 @@ module combustion_juniper
 	implicit none
 
 	REAL, PARAMETER :: Pi = 3.1415927
-	double precision, parameter :: dt = 0.001d0
+	double precision, parameter :: dt = 0.005d0
 	integer, parameter :: d = 20, N = 10	
 	double precision, parameter :: xf = 0.3d0
 	double precision, parameter :: beta = 0.d0, c1 = 0.05d0, c2 = 0.01d0
