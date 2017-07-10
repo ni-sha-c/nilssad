@@ -10,15 +10,14 @@ def solve_fd(u0, steps):
 		u0 = u1
 	return u1
 def solve_sp(u0, steps):
-	u1= np.fliplr(u0)
 	n = len(u0)
 	dt = 1.e-4
-	dx = 1.e-2
-	D = (-1.e0/dt)*np.eye(n-1,n-1) +   
+	D = cheb_diff_matrix(n)
+	D = D[0:n-1,0:n-1]
+	u1 = np.copy(u0)
 	for k in range(steps):
-		u1[0] = 1.0
-		for i in range(1,101):
-			u1[i] = u0[i]*(1.0 - dt/dx) + u0[i-1]*dt/dx
+		u1[-1] = 1.0
+		u1[0:n-1] = np.linalg.solve(np.eye(n-1,n-1)-dt*D,u0[0:n-1])
 		u0 = u1
 	return u1
 def cheb_pts(k,n):
