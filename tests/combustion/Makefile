@@ -14,9 +14,9 @@ solver_ht: $(addsuffix .o, $(RTSUPP)) \
 combustion_juniper_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss.o
 	${F90C} -o $@ $^
 
-#solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
+solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
 combustion_juniper_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
-#	${F90C} -o $@ $^
+	${F90C} -o $@ $^
 
 
 #solver_primal: \
@@ -29,7 +29,7 @@ combustion_juniper_passive.o driver_primal.o
 
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
 
-#numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
+numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
 	
 
 #toolChain : numCore.f90
@@ -47,13 +47,13 @@ toolChainh : numCoreh.f90
 numCoreh.f90: combustion_juniper.f90 head.prepped.homo.f90
 	cat $^ > $@
 
-#toolChaini : numCorei.f90
-#	openad -c -m rj $<
-#	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
-#	cat OAD_active.f90 | sed 's/100/33/' > OAD_active_custom.f90	
+toolChaini : numCorei.f90
+	openad -c -m rj $<
+	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+	cat OAD_active.f90 | sed 's/100/33/' > OAD_active_custom.f90	
 
-#numCorei.f90: combustion_juniper.f90 head.prepped.inhomo.f90
-#	cat $^ > $@
+numCorei.f90: combustion_juniper.f90 head.prepped.inhomo.f90
+	cat $^ > $@
 
 
 combustion_juniper_passive.f90: combustion_juniper.f90
