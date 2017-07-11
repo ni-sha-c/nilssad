@@ -6,15 +6,14 @@ module combustion_juniper
 	REAL, PARAMETER :: Pi = 3.1415927
 	double precision, parameter :: dt = 0.005d0
 	integer, parameter :: d = 20, N = 10	
-	double precision, parameter :: xf = 0.3d0
-	double precision, parameter :: beta = 0.d0, c1 = 0.05d0, c2 = 0.01d0
 	double precision, parameter :: sigma = 10., b = 8./3.
 
 contains
 
-subroutine Xnp1(X,Xnp1_res,Xtmtau)
+subroutine Xnp1(X,Xnp1_res,Xtmtau,c1,c2,beta,xf)
 
 	implicit none
+	double precision :: c1, c2, beta, xf
 	double precision, dimension(d):: X, Xnp1_res
     double precision, dimension(d):: k1, k2, k3, k4
 	double precision, dimension(d):: ddt
@@ -22,22 +21,22 @@ subroutine Xnp1(X,Xnp1_res,Xtmtau)
 	double precision, dimension(N) :: Xtmtau 
 	
 	
-    call dXdt(X,ddt,Xtmtau)
+    call dXdt(X,ddt,Xtmtau,c1,c2,beta,xf)
     do i = 1, d, 1
 		k1(i) = dt*ddt(i)
 	   	Xnp1_res(i) = X(i) + 0.5d0*k1(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau)
+	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
     do i = 1, d, 1
 		k2(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + 0.5d0*k2(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau)
+	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
     do i = 1, d, 1
 		k3(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + k3(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau)
+	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
  	do i = 1, d, 1
 		k4(i) = dt*ddt(i) 
 	end do
@@ -50,11 +49,11 @@ subroutine Xnp1(X,Xnp1_res,Xtmtau)
 	end do
 
 end subroutine Xnp1
-double precision function uf(X)
+double precision function uf(X,xf)
 	
 	implicit none
 	double precision, dimension(N) :: X
-	double precision :: uf0
+	double precision :: uf0, xf
 	integer :: i
 
 	uf0 = 0.d0
@@ -65,15 +64,18 @@ double precision function uf(X)
 	end do 			
 	uf = uf0
 end function uf 
-double precision function zeta(i)
+double precision function zeta(i,c1,c2)
 	
 	implicit none
 	integer :: i
+	double precision :: c1, c2
 	zeta = c1*(i**2.0) + c2*(i**0.5d0)
 
 end function zeta
-subroutine dXdt(X,dXdt_res,Xtmtau)
+subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
 	implicit none
+	double precision, intent(in) :: c1, c2, beta
+	double precision, intent(in) :: xf
 	double precision, dimension(d) :: X
 	double precision, dimension(N) :: Xtmtau
 	double precision, intent(out), dimension(d) :: dXdt_res
@@ -81,17 +83,17 @@ subroutine dXdt(X,dXdt_res,Xtmtau)
 	
 	do i = 1, N, 1
 		dXdt_res(i) = i*pi*X(N+i)
-		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i)*X(N+i) &
-						- 2.d0*beta*(abs(1.d0/3.d0 + uf(Xtmtau))**0.5d0 &
+		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i,c1,c2)*X(N+i) &
+						- 2.d0*beta*(abs(1.d0/3.d0 + uf(Xtmtau,xf))**0.5d0 &
 						  - (1.d0/3.d0)**0.5d0)* &
 						 sin(i*pi*xf)	
 	end do
 end subroutine dXdt
-subroutine Objective(X,J,s)
+subroutine Objective(X,J,xf)
 	implicit none
 	double precision, intent(in), dimension(d) :: X
 	double precision, intent(out) :: J
-	double precision, intent(in) :: s
+	double precision, intent(in) :: xf
 	integer :: t
 
 	J = 0.d0
