@@ -8,7 +8,7 @@ module combustion_juniper
 	integer, parameter :: d = 20, N = 10	
 	double precision, parameter :: xf = 0.3d0
 	double precision, parameter :: beta = 0.d0, c1 = 0.05d0, c2 = 0.01d0
-
+	double precision, parameter :: sigma = 10., b = 8./3.
 
 contains
 
@@ -169,4 +169,4 @@ subroutine rk45_full(X,v,vnp1)
 
 end subroutine rk45_full 
 
-end module combustion
+end module combustion_juniper

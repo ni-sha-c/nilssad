@@ -1,7 +1,7 @@
 program driver
 	use OAD_active
 	use OAD_rev
-	use combustion_juniper_passive
+	use lorenz63_passive
 	implicit none 
 	external head_inhomogeneous
 	type(active) :: x
