@@ -74,8 +74,8 @@ double precision function zeta(i,c1,c2)
 end function zeta
 subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
 	implicit none
-	double precision, intent(in) :: c1, c2, beta
-	double precision, intent(in) :: xf
+	double precision :: c1, c2, beta
+	double precision :: xf
 	double precision, dimension(d) :: X
 	double precision, dimension(N) :: Xtmtau
 	double precision, intent(out), dimension(d) :: dXdt_res
