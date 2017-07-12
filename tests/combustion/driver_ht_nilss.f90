@@ -15,6 +15,10 @@ program driver
 
 	!our_rev_mode%tape=.TRUE.
 	eps = 1.d-4
+	c2 = 0.01d0
+	xf = 0.3d0
+	beta = 0.75d0
+	tau = 0.02d0
 
 	
 	if (command_argument_count() .ne. 2) then
@@ -54,7 +58,7 @@ program driver
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) c1, c2, beta, tau, xf
+    Read(1) c1
     Close(1)
 
 		

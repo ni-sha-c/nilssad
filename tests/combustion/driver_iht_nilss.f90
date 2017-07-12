@@ -21,6 +21,10 @@ program driver
 	end do
 	our_rev_mode%tape=.TRUE.
 
+	c2 = 0.01d0
+	xf = 0.3d0
+	beta = 0.75d0
+	tau = 0.02d0
 
 	
 	if (command_argument_count() .ne. 1) then
@@ -53,7 +57,7 @@ program driver
 	xprime = xprime - ds
 
 	
-	call head_inhomogeneous(x,xprime,y,X0,v0,nSteps)
+	call head_inhomogeneous(x,xprime,c2,beta,tau,xf,y,X0,v0,nSteps)
 		
 	Open(1, file="output_ihtangent.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')

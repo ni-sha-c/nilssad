@@ -31,7 +31,7 @@ subroutine head_homogeneous(eps,c1,c2,beta,tau,xf,y,X0,v0,nSteps)
 		end do
 	end do
 	
-	do t = 1, nSteps - inttau, 1
+	do t = 1, nSteps, 1
 		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),c1,c2,beta,xf)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
