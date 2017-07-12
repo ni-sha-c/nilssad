@@ -65,11 +65,35 @@ program driver
     Close(1)
 
 	!check using finite difference
-	!Xtemp1 = Xorig
-	!do t = 1, nSteps, 1
-	!	call Xnp1(Xtemp1, X1, x%v)
-	!	Xtemp1 = X1
+ 	!inttau = int(tau/dt)
+	!allocate(Xtmtau(d,inttau))
+	!do t = 1, d, 1
+	!	X1(t) = Xorig(t) 
+	!	zeroarray(t) = 0.d0
 	!end do
+
+	!do t = 1, inttau, 1
+	!	call Xnp1(X1,Xnp1_res,zeroarray,c1,c2,beta,xf)
+	!	do t1 = 1, d, 1
+	!		X1(t1) = Xnp1_res(t1)
+	!		Xtmtau(t1,t) = Xnp1_res(t1)		
+	!	end do
+	!end do
+
+		
+	!do t = 1, nSteps, 1
+	!	call Xnp1(X1,Xnp1_res,Xtmtau(:,mod(t,inttau)),c1,c2,beta,xf)
+	!	do t1 = 1, d, 1
+	!		X1(t1) = Xnp1_res(t1)
+	!		do t2 = 1, inttau-1, 1
+	!			Xtmtau(t1,t2) = Xtmtau(t1,t2+1)		
+	!		end do
+	!		Xtmtau(t1,inttau) = Xnp1_res(t1)
+	!	end do
+	!end do
+
+	!Xtemp1 = X1 
+
 	!Xtemp2 = Xorig + vorig(:,1)*ds 
 	!do t = 1, nSteps, 1
 	!	call Xnp1(Xtemp2, X1, x%v+ds)
