@@ -1,4 +1,4 @@
-subroutine head_homogeneous(eps,params,y,X0,v0,nSteps)
+subroutine head_homogeneous(eps,param_active,params_passive,y,X0,v0,nSteps)
 	use combustion_juniper
 	implicit none 
 	double precision, dimension(d) :: X
@@ -9,13 +9,15 @@ subroutine head_homogeneous(eps,params,y,X0,v0,nSteps)
 	integer :: t, t1, t2
 	integer, intent(in) :: nSteps
 	double precision, intent(in) :: eps
-	double precision :: c1,c2,beta,tau,xf
+	double precision :: tau
 	double precision, dimension(:,:), allocatable :: Xtmtau
 	double precision, dimension(d) :: zeroarray
-	double precision, dimension(N_p) :: params
+	double precision, dimension(N_p-1) :: params_passive
+	double precision :: param_active
 
 !$openad INDEPENDENT(eps)
 
+	tau = params_passive(N_p-1)	
 	inttau = int(tau/dt)
 	allocate(Xtmtau(d,inttau))
 	do t = 1, d, 1 
@@ -24,7 +26,7 @@ subroutine head_homogeneous(eps,params,y,X0,v0,nSteps)
 	end do
 
 	do t = 1, inttau, 1
-		call Xnp1(X,Xnp1_res,zeroarray,params)
+		call Xnp1(X,Xnp1_res,zeroarray,param_active,params_passive)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
 			Xtmtau(t1,t) = Xnp1_res(t1)		
@@ -32,7 +34,7 @@ subroutine head_homogeneous(eps,params,y,X0,v0,nSteps)
 	end do
 	
 	do t = 1, nSteps, 1
-		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),params)
+		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),param_active,params_passive)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
 			do t2 = 1, inttau-1, 1

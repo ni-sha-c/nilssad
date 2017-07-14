@@ -11,39 +11,39 @@ module combustion_juniper
 
 contains
 
-subroutine Xnp1(X,Xnp1_res,Xtmtau,params)
+subroutine Xnp1(X,Xnp1_res,Xtmtau,param_active,params_passive)
 
 	implicit none
-	double precision :: c1, c2, beta, xf
+	double precision :: c2, beta, xf
 	double precision, dimension(d):: X, Xnp1_res
     double precision, dimension(d):: k1, k2, k3, k4
 	double precision, dimension(d):: ddt
 	integer :: i, imax
 	double precision, dimension(N) :: Xtmtau 
-	double precision, dimension(N_p) :: params
+	double precision, dimension(N_p-1) :: params_passive
+	double precision :: param_active 
 	
 
-	c1 = params(1)
-	c2 = params(2)
-	beta = params(3)
-	xf = params(4)
+	c2 = params_passive(1)
+	beta = params_passive(2)
+	xf = params_passive(3)
 		
-    call dXdt(X,ddt,Xtmtau,c1,c2,beta,xf)
+    call dXdt(X,ddt,Xtmtau,param_active,c2,beta,xf)
     do i = 1, d, 1
 		k1(i) = dt*ddt(i)
 	   	Xnp1_res(i) = X(i) + 0.5d0*k1(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
     do i = 1, d, 1
 		k2(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + 0.5d0*k2(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
     do i = 1, d, 1
 		k3(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + k3(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,c1,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
  	do i = 1, d, 1
 		k4(i) = dt*ddt(i) 
 	end do
