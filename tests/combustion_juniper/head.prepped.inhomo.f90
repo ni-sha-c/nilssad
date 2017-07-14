@@ -1,10 +1,11 @@
-subroutine head_inhomogeneous(c1,c1prime,c2,beta,tau,xf,y,X0,v0,nSteps)
+subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 	use combustion_juniper
 	implicit none 
 	double precision, dimension(d) :: X
 	double precision, dimension(d) :: Xnp1_res
 	double precision, intent(in) :: c1
-	double precision :: c2, c1prime, beta, tau, xf
+	double precision :: c1prime
+	double precision, dimension(N_p-1) :: params_passive
 	double precision, dimension(d), intent(in) :: X0, v0
 	double precision, dimension(d), intent(out) :: y
 	integer :: t, t1, t2, inttau
@@ -23,7 +24,7 @@ subroutine head_inhomogeneous(c1,c1prime,c2,beta,tau,xf,y,X0,v0,nSteps)
 	allocate(Xtmtau(d,inttau))
 
 	do t = 1, inttau, 1
-		call Xnp1(X,Xnp1_res,zeroarray,c1,c2,beta,xf)
+		call Xnp1(X,Xnp1_res,zeroarray,params)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
 			Xtmtau(t1,t) = Xnp1_res(t1)		
@@ -31,7 +32,7 @@ subroutine head_inhomogeneous(c1,c1prime,c2,beta,tau,xf,y,X0,v0,nSteps)
 	end do
 	
 	do t = 1, nSteps, 1
-		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),c1,c2,beta,xf)
+		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),params)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
 			do t2 = 1, inttau-1, 1

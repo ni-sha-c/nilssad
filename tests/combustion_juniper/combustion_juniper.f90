@@ -5,12 +5,13 @@ module combustion_juniper
 
 	REAL, PARAMETER :: Pi = 3.1415927
 	double precision, parameter :: dt = 0.005d0
-	integer, parameter :: d = 20, N = 10	
+	integer, parameter :: d = 20, N = 10
+	integer, parameter :: N_p = 4	
 	double precision, parameter :: sigma = 10., b = 8./3.
 
 contains
 
-subroutine Xnp1(X,Xnp1_res,Xtmtau,c1,c2,beta,xf)
+subroutine Xnp1(X,Xnp1_res,Xtmtau,params)
 
 	implicit none
 	double precision :: c1, c2, beta, xf
@@ -19,8 +20,14 @@ subroutine Xnp1(X,Xnp1_res,Xtmtau,c1,c2,beta,xf)
 	double precision, dimension(d):: ddt
 	integer :: i, imax
 	double precision, dimension(N) :: Xtmtau 
+	double precision, dimension(N_p) :: params
 	
-	
+
+	c1 = params(1)
+	c2 = params(2)
+	beta = params(3)
+	xf = params(4)
+		
     call dXdt(X,ddt,Xtmtau,c1,c2,beta,xf)
     do i = 1, d, 1
 		k1(i) = dt*ddt(i)

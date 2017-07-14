@@ -9,16 +9,17 @@ program driver
 	double precision, dimension(d) :: X0, X1, Xorig, Xtemp1, Xtemp2
 	double precision, dimension(:,:), allocatable :: v0,v,vorig
 	integer :: t, nSteps, subspace_dimension, t1, t2
-	double precision :: c1, c2, beta, tau, xf, eps
+	double precision :: eps
+	double precision, dimension(N_p) :: params
 	character(len=128) :: arg1, arg2
 
 
 	!our_rev_mode%tape=.TRUE.
 	eps = 1.d-4
-	c2 = 0.01d0
-	xf = 0.3d0
-	beta = 0.75d0
-	tau = 0.02d0
+!	c2 = 0.01d0
+!	xf = 0.3d0
+!	beta = 0.75d0
+!	tau = 0.02d0
 
 	
 	if (command_argument_count() .ne. 2) then
@@ -58,7 +59,9 @@ program driver
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) c1
+	do t = 1, N_p, 1
+    	Read(1) params(t)
+	end do
     Close(1)
 
 		
@@ -80,7 +83,7 @@ program driver
 		x(t)%v = eps
 		
 
-		call head_homogeneous(x(t)%v,c1,c2,beta,tau,xf,y(:,t),X0,v0(:,t),nSteps)
+		call head_homogeneous(x(t)%v,params,y(:,t),X0,v0(:,t),nSteps)
 
 		Write(1) x(t)%d		
 

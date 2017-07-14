@@ -11,6 +11,8 @@ program driver
 	double precision :: dzds_t, xprime
 	integer :: t, nSteps
 	double precision :: ds
+	double precision, dimension(N_p) :: params
+	double precision, dimension(Np-1) :: params_passive
 	character(len=128) :: arg
 
 
@@ -51,13 +53,21 @@ program driver
 
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) xprime
+	do t = 1, N_p, 1
+    	Read(1) params(t)
+	end do
     Close(1)
+
+	xprime = params(1)
 	x%v = xprime
 	xprime = xprime - ds
 
+
+	do t = 1, N_p -1, 1
+		params_passive(t) = params(t+1)
+	end do
 	
-	call head_inhomogeneous(x,xprime,c2,beta,tau,xf,y,X0,v0,nSteps)
+	call head_inhomogeneous(x,xprime,params_passive,y,X0,v0,nSteps)
 		
 	Open(1, file="output_ihtangent.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
