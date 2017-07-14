@@ -19,25 +19,19 @@ combustion_juniper_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
 	${F90C} -o $@ $^
 
 
-#solver_primal: \
+solver_primal: \
 combustion_juniper_passive.o driver_primal.o 
-#	${F90C} -o $@ $^ 
+	${F90C} -o $@ $^ 
 
 
 
-#numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain 
+
 
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
 
 numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
 	
 
-#toolChain : numCore.f90
-#	openad -c -m rj $<
-	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
-
-#numCore.f90: combustion_juniper.f90 head.prepped.f90
-#	cat $^ > $@
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<

@@ -96,14 +96,17 @@ subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
 						 sin(i*pi*xf)	
 	end do
 end subroutine dXdt
-subroutine Objective(X,J,xf)
+subroutine Objective(X,J,param_active,params_passive)
 	implicit none
 	double precision, intent(in), dimension(d) :: X
 	double precision, intent(out) :: J
-	double precision, intent(in) :: xf
+	double precision :: xf
+	double precision, dimension(N_p-1):: params_passive
+	double precision :: param_active
 	integer :: t
 
 	J = 0.d0
+	xf = params_passive(N_p-2)
 	do t = 1, N, 1
 		J = J - X(N+t)*sin(t*pi*xf)
 	end do

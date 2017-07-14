@@ -12,7 +12,7 @@ program driver
 	integer :: t, nSteps
 	double precision :: ds
 	double precision, dimension(N_p) :: params
-	double precision, dimension(Np-1) :: params_passive
+	double precision, dimension(N_p-1) :: params_passive
 	character(len=128) :: arg
 
 
@@ -22,11 +22,6 @@ program driver
 		y(t)%d(t) = 1.d0
 	end do
 	our_rev_mode%tape=.TRUE.
-
-	c2 = 0.01d0
-	xf = 0.3d0
-	beta = 0.75d0
-	tau = 0.02d0
 
 	
 	if (command_argument_count() .ne. 1) then

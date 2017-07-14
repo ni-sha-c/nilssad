@@ -1,10 +1,12 @@
 program flow
 	use combustion_juniper_passive
 	implicit none 
-	double precision, dimension(d) :: X0, X1, zeroarray
+	double precision, dimension(d) :: X0, X1, zeroarray, Xnp1_res
 	double precision, dimension(:), allocatable :: J
-	integer :: t, nSteps, inttau
-	double precision:: c1,c2,beta,xf,tau
+	integer :: t, nSteps, inttau, t1, t2
+	double precision:: param_active, tau
+	double precision, dimension(N_p) :: params
+	double precision, dimension(N_p-1) :: params_passive
 	double precision, dimension(:,:), allocatable :: Xtmtau
 	character(len=128) :: arg
 
@@ -22,22 +24,21 @@ program flow
 
 	allocate(J(nSteps))
 
-	c2 = 0.01d0
-	xf = 0.3d0
-	beta = 0.75d0
-	tau = 0.02d0
-
 
 	Open(1, file="input_primal.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
     Read(1) X0
     Close(1)
 
-	
+
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
-    Read(1) c1
+	do t = 1, N_p, 1
+    	Read(1) params(t)
+	end do
     Close(1)
+	param_active = params(1)
+	params_passive = params(2:N_p)
 
 	inttau = int(tau/dt)
 	allocate(Xtmtau(d,inttau))
@@ -47,7 +48,7 @@ program flow
 	end do
 
 	do t = 1, inttau, 1
-		call Xnp1(X1,Xnp1_res,zeroarray,c1,c2,beta,xf)
+		call Xnp1(X1,Xnp1_res,zeroarray,param_active,params_passive)
 		do t1 = 1, d, 1
 			X1(t1) = Xnp1_res(t1)
 			Xtmtau(t1,t) = Xnp1_res(t1)		
@@ -56,7 +57,7 @@ program flow
 
 		
 	do t = 1, nSteps, 1
-		call Xnp1(X1,Xnp1_res,Xtmtau(:,mod(t,inttau)),c1,c2,beta,xf)
+		call Xnp1(X1,Xnp1_res,Xtmtau(:,mod(t,inttau)),param_active,params_passive)
 		do t1 = 1, d, 1
 			X1(t1) = Xnp1_res(t1)
 			do t2 = 1, inttau-1, 1
@@ -64,7 +65,7 @@ program flow
 			end do
 			Xtmtau(t1,inttau) = Xnp1_res(t1)
 		end do
-		call Objective(Xnp1_res,J(t),xf)
+		call Objective(Xnp1_res,J(t),param_active,params_passive)
 	end do
 
 	
