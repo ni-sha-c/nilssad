@@ -11,6 +11,8 @@ program driver
 	integer :: t, nSteps, subspace_dimension, t1, t2
 	double precision :: eps
 	double precision, dimension(N_p) :: params
+	double precision, dimension(N_p-1) :: params_passive
+	double precision :: param_active
 	character(len=128) :: arg1, arg2
 
 
@@ -63,7 +65,8 @@ program driver
     	Read(1) params(t)
 	end do
     Close(1)
-
+	param_active = params(1)
+	params_passive = params(2:N_p)
 		
 	Open(1, file="output_htangents.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
@@ -83,7 +86,7 @@ program driver
 		x(t)%v = eps
 		
 
-		call head_homogeneous(x(t)%v,params,y(:,t),X0,v0(:,t),nSteps)
+		call head_homogeneous(x(t)%v,param_active,params_passive,y(:,t),X0,v0(:,t),nSteps)
 
 		Write(1) x(t)%d		
 

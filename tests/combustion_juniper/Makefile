@@ -78,7 +78,7 @@ ad_inline.f:toolChain
 clean: 
 	rm -f ad_template* ad_inline.f OAD_* w2f__*  iaddr* 
 	rm -f head.prepped.pre.* *.B *.xaif *.o *.mod driver driverE *~
-	rm -f numCore* 
+	rm -f numCore* *.mod* 
 .PHONY: clean toolChain
 # the following include has explicit rules that could replace the openad script
 include MakeExplRules.inc
