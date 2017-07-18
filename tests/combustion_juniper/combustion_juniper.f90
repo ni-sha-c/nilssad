@@ -91,7 +91,8 @@ subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
 	do i = 1, N, 1
 		dXdt_res(i) = i*pi*X(N+i)
 		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i,c1,c2)*X(N+i) &
-						- 2.d0*beta*(abs(1.d0/3.d0 + uf(Xtmtau,xf))**0.5d0 &
+						- 2.d0*beta*(((1.d0/3.d0 + uf(Xtmtau,xf))**2.0d0 &
+						+ 0.001d0)**0.25d0 &
 						  - (1.d0/3.d0)**0.5d0)* &
 						 sin(i*pi*xf)	
 	end do

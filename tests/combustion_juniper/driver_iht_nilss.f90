@@ -61,7 +61,7 @@ program driver
 	do t = 1, N_p -1, 1
 		params_passive(t) = params(t+1)
 	end do
-	
+		
 	call head_inhomogeneous(x,xprime,params_passive,y,X0,v0,nSteps)
 		
 	Open(1, file="output_ihtangent.bin", form="unformatted", access="stream", &
