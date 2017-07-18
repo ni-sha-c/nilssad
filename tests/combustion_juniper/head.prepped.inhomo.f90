@@ -43,7 +43,7 @@ subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 			end do
 			Xtmtau(t1,inttau) = Xnp1_res(t1)
 		end do
-		if(counter .eq. inttau - 1) then 
+		if(counter .eq. inttau) then 
 			counter = 0
 		end if 
 	end do

@@ -3,7 +3,7 @@ program flow
 	implicit none 
 	double precision, dimension(d) :: X0, X1, zeroarray, Xnp1_res
 	double precision, dimension(:), allocatable :: J
-	integer :: t, nSteps, inttau, t1, t2
+	integer :: t, nSteps, inttau, t1, t2, counter
 	double precision:: param_active, tau
 	double precision, dimension(N_p) :: params
 	double precision, dimension(N_p-1) :: params_passive
@@ -53,9 +53,10 @@ program flow
 			Xtmtau(t1,t) = Xnp1_res(t1)		
 		end do
 	end do
-		
+	counter = 0		
 	do t = 1, nSteps, 1
-		call Xnp1(X1,Xnp1_res,Xtmtau(:,mod(t,inttau)),param_active,params_passive)
+		counter = counter + 1
+		call Xnp1(X1,Xnp1_res,Xtmtau(:,counter),param_active,params_passive)
 		do t1 = 1, d, 1
 			X1(t1) = Xnp1_res(t1)
 			do t2 = 1, inttau-1, 1
@@ -64,6 +65,9 @@ program flow
 			Xtmtau(t1,inttau) = Xnp1_res(t1)
 		end do
 		call Objective(Xnp1_res,J(t),param_active,params_passive)
+		if(counter .eq. inttau) then
+			counter = 0
+		end if
 	end do
 
 	
