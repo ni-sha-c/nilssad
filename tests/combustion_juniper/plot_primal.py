@@ -5,7 +5,7 @@ with open('output_primal.bin', 'rb') as f:
 Ng = 10
 eta1 = np.zeros(Ng)
 eta2 = np.zeros(Ng)
-u1 = np.fromstring(u1,dtype='<f8')
+u1 = np.fromstring(u1,dtype=np.dtype('>f8'))
 
 eta1[:] = u1[0:Ng]
 eta2[:] = u1[Ng:2*Ng]

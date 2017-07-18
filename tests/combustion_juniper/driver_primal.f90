@@ -30,7 +30,6 @@ program flow
     Read(1) X0
     Close(1)
 
-
 	Open(1, file="param.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
 	do t = 1, N_p, 1
@@ -54,7 +53,6 @@ program flow
 			Xtmtau(t1,t) = Xnp1_res(t1)		
 		end do
 	end do
-
 		
 	do t = 1, nSteps, 1
 		call Xnp1(X1,Xnp1_res,Xtmtau(:,mod(t,inttau)),param_active,params_passive)
@@ -69,7 +67,7 @@ program flow
 	end do
 
 	
-
+	print *, X1
 	Open(1, file="output_primal.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
     Write(1) X1
