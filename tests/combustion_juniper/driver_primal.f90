@@ -67,7 +67,7 @@ program flow
 	end do
 
 	
-	print *, X1
+	!print *, X1
 	Open(1, file="output_primal.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
     Write(1) X1

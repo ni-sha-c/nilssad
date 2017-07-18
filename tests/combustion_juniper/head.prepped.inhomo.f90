@@ -9,7 +9,7 @@ subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 	double precision, dimension(N_p) :: params
 	double precision, dimension(d), intent(in) :: X0, v0
 	double precision, dimension(d), intent(out) :: y
-	integer :: t, t1, t2, inttau
+	integer :: t, t1, t2, inttau, counter
 	integer, intent(in) :: nSteps
 	double precision :: sprime, tau
 	double precision, dimension(d) :: zeroarray
@@ -24,7 +24,7 @@ subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 
 	inttau = int(tau/dt)
 	allocate(Xtmtau(d,inttau))
-
+	
 	do t = 1, inttau, 1
 		call Xnp1(X,Xnp1_res,zeroarray,c1,params_passive)
 		do t1 = 1, d, 1
@@ -32,9 +32,10 @@ subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 			Xtmtau(t1,t) = Xnp1_res(t1)		
 		end do
 	end do
-	
+	counter = 0	
 	do t = 1, nSteps, 1
-		call Xnp1(X,Xnp1_res,Xtmtau(:,mod(t,inttau)),c1,params_passive)
+		counter = counter + 1
+		call Xnp1(X,Xnp1_res,Xtmtau(:,counter),c1,params_passive)
 		do t1 = 1, d, 1
 			X(t1) = Xnp1_res(t1)
 			do t2 = 1, inttau-1, 1
@@ -42,6 +43,9 @@ subroutine head_inhomogeneous(c1,c1prime,params_passive,y,X0,v0,nSteps)
 			end do
 			Xtmtau(t1,inttau) = Xnp1_res(t1)
 		end do
+		if(counter .eq. inttau - 1) then 
+			counter = 0
+		end if 
 	end do
 
 	do t = 1, d, 1
