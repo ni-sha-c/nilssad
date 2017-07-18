@@ -11,7 +11,7 @@ sys.path.append(os.path.join(my_path, '..'))
 #reload(simple_fds)
 from simple_fds import *
 
-solver_path = os.path.join(my_path, 'combustion')
+solver_path = os.path.join(my_path, 'combustion_juniper')
 solver = os.path.join(solver_path, 'solver_primal')
 u0 = loadtxt(os.path.join(solver_path, 'u0'))
 solver_ht = os.path.join(solver_path, 'solver_ht')
@@ -23,6 +23,7 @@ def solve(u, s, nsteps):
         f.write(asarray(u, dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
         f.write(asarray(s, dtype='>d').tobytes())
+        f.write(asarray([0.05,0.865,0.3,0.04], dtype='>d').tobytes())
     call([solver, str(int(nsteps))], cwd=tmp_path)
     with open(os.path.join(tmp_path, 'output_primal.bin'), 'rb') as f:
         out = frombuffer(f.read(), dtype='>d')
@@ -38,6 +39,7 @@ def solve_ht(u, v, s, sd, nsteps):
         f.write(asarray(u, dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
         f.write(asarray(s, dtype='>d').tobytes())
+        f.write(asarray([0.05,0.865,0.3,0.04], dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'input_htangents.bin'), 'wb') as f:
         f.write(asarray(v, dtype='>d').tobytes())
 
@@ -56,6 +58,7 @@ def solve_iht(u, v, s, nsteps):
         f.write(asarray(u, dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'param.bin'), 'wb') as f:
         f.write(asarray(s, dtype='>d').tobytes())
+        f.write(asarray([0.05,0.865,0.3,0.04], dtype='>d').tobytes())
     with open(os.path.join(tmp_path, 'input_ihtangent.bin'), 'wb') as f:
         f.write(asarray(v, dtype='>d').tobytes())
 

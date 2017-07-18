@@ -39,7 +39,7 @@ program flow
     Close(1)
 	param_active = params(1)
 	params_passive = params(2:N_p)
-
+	tau = params_passive(N_p-1)
 	inttau = int(tau/dt)
 	allocate(Xtmtau(d,inttau))
 	do t = 1, d, 1
