@@ -66,7 +66,7 @@ program driver
 		
 	Open(1, file="output_ihtangent.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
-    Write(1) x%d
+    Write(1) x%d(1:d)
     Close(1)
 
 	!check using finite difference

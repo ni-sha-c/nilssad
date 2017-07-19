@@ -72,15 +72,14 @@ def continue_shadowing(
 
     V = time_dil.project(V)
     v = time_dil.project(v)
-
     u0, V, v, J0, G, g = run_segment(
             run, run_ht, run_iht, u0, V, v, parameter, i, steps_per_segment,
             epsilon)
-
+    
     J_hist.append(J0)
     G_lss.append(G)
     g_lss.append(g)
-
+	
     for i in range(lss.K_segments() + 1, num_segments + 1):
 
         time_dil = TimeDilation(run, u0, parameter)

@@ -88,7 +88,7 @@ program driver
 
 		call head_homogeneous(x(t)%v,param_active,params_passive,y(:,t),X0,v0(:,t),nSteps)
 
-		Write(1) x(t)%d		
+		Write(1) x(t)%d(1:d)		
 
 		!Xtemp2 = Xorig + eps*v0(:,t)
 		!do t2 = 1, nSteps, 1

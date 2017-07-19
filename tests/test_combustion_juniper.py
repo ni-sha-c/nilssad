@@ -62,7 +62,6 @@ def solve_iht(u, v, s, nsteps):
     with open(os.path.join(tmp_path, 'input_ihtangent.bin'), 'wb') as f:
         f.write(asarray(v, dtype='>d').tobytes())
 
-
     call([solver_iht, str(int(nsteps))], cwd=tmp_path)
 
     with open(os.path.join(tmp_path, 'output_ihtangent.bin'), 'rb') as f:
@@ -78,7 +77,7 @@ def test_gradient():
     J, G = zeros([s.size, 2]), zeros([s.size, 2])
     for i, si in enumerate(s):
         print(i)
-        Ji, Gi = shadowing(solve, solve_ht, solve_iht, u0, si, 2, 10, 1000, 5000)
+        Ji, Gi = shadowing(solve, solve_ht, solve_iht, u0, si, 3, 10, 10000, 50000)
         J[i,:] = Ji
         G[i,:] = Gi
     #assert all(abs(J[:,1] - 100) < 1E-12)

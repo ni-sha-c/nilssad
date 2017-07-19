@@ -51,6 +51,7 @@ def run_segment(run, run_ht, run_iht, u0, V, v, parameter, i_segment, steps,
 		u1p = res_h[j][0]
 		V[j] = res_had[total_dimension*j:total_dimension*(j+1)]
 		G.append(trapez_mean((J1 - J0) / epsilon, 0))
+
 	# get inhomogeneous tangent
 	J1 = res_i[1]
 	u1p = res_i[0]
