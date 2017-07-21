@@ -23,7 +23,13 @@ solver_primal: \
 combustion_juniper_passive.o driver_primal.o 
 	${F90C} -o $@ $^ 
 
+solver_attractor: \
+combustion_juniper_passive.o driver_attractor.o 
+	${F90C} -o $@ $^ 
 
+solver_phaseportrait: \
+combustion_juniper_passive.o phase_portrait.o 
+	${F90C} -o $@ $^ 
 
 
 

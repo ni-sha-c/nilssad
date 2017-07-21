@@ -113,6 +113,27 @@ subroutine Objective(X,J,param_active,params_passive)
 	end do
 
 end subroutine Objective
+subroutine FlameOutput(X,Xtmtau,pf,ufvar,heat,param_active,params_passive)
+	implicit none
+	double precision, intent(in), dimension(d) :: X, Xtmtau
+	double precision, intent(out) :: pf,ufvar,heat
+	double precision :: xf
+	double precision, dimension(N_p-1):: params_passive
+	double precision :: param_active
+	integer :: t
+
+	pf = 0.d0
+    ufvar = 0.d0
+    heat = 0.d0
+	xf = params_passive(N_p-2)
+	do t = 1, N, 1
+		pf = pf - X(N+t)*sin(t*pi*xf)
+        ufvar = ufvar + X(t)*cos(t*pi*xf)
+        heat = heat + Xtmtau(t)*cos(t*pi*xf)
+    end do
+    heat = ((1.d0/3.d0 + heat)**2.d0 + 0.001d0)**0.25d0 - (1.d0/3.d0)**0.5d0
+end subroutine FlameOutput
+
 subroutine dfdX(X,dfdX_res)
 
 	implicit none
