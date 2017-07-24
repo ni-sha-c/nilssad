@@ -80,12 +80,11 @@ program driver
 	
 	do t = 1, subspace_dimension, 1
 		do t2 = 1, d, 1
-			y(t2,t)%d = 0.d0
+			y(t2,t)%d = 1.d0
 			y(t2,t)%d(t2) = 1.d0
+			x(t)%d(t2) = 0.d0
 		end do
 		x(t)%v = eps
-		
-
 		call head_homogeneous(x(t)%v,param_active,params_passive,y(:,t),X0,v0(:,t),nSteps)
 
 		Write(1) x(t)%d(1:d)		
@@ -99,7 +98,7 @@ program driver
 		!print *, "From AD: ", x(t)%d
 		!print *, "From FD: ", (Xtemp2 - Xtemp1)/eps
 
-
+		
 
 	end do
     Close(1)
