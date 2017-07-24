@@ -1,4 +1,4 @@
-subroutine head_homogeneous(eps,param_active,params_passive,y,X0,v0,nSteps)
+subroutine head_homogeneous(eps,y,param_active,params_passive,X0,v0,nSteps)
 	use combustion_juniper
 	implicit none 
 	double precision, dimension(d) :: X
@@ -48,14 +48,13 @@ subroutine head_homogeneous(eps,param_active,params_passive,y,X0,v0,nSteps)
 		end if
 	end do
 	do t = 1, d, 1
-		y(t) = 2*eps !X(t)
+		y(t) = X(t)
 	end do
 	
 	!y(1) = 1.d0
 	!y(2) = s
 	!y(3) = 1.d0
 !$openad DEPENDENT(y)
-	print *, "y is : ", y
 
 end subroutine
 

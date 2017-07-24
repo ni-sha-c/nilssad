@@ -73,7 +73,8 @@ def solve_iht(u, v, s, nsteps):
 
 ##if __name__ == '__main__':
 def test_gradient():
-    s = linspace(0.015, 0.035, 2)
+    #s = linspace(0.015, 0.035, 2)
+    s = array([0.025]) 
     J, G = zeros([s.size, 2]), zeros([s.size, 2])
     for i, si in enumerate(s):
         print(i)
