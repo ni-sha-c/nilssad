@@ -25,7 +25,7 @@ program flow
 	allocate(J(nSteps))
 
 
-	Open(1, file="input_primal.bin", form="unformatted", access="stream", &
+	Open(1, file="input_attractor.bin", form="unformatted", access="stream", &
             status="old", convert='big_endian')
     Read(1) X0
     Close(1)
@@ -55,7 +55,7 @@ program flow
 	end do
 	counter = 0		
 	
-	Open(1, file="output_attractor.bin", form="unformatted", access="stream", &
+	Open(1, file="pf_history.bin", form="unformatted", access="stream", &
          status='replace', convert='big_endian')
 
     do t = 1, nSteps, 1
@@ -68,11 +68,11 @@ program flow
 			end do
 			Xtmtau(t1,inttau) = Xnp1_res(t1)
 		end do
-		!call Objective(Xnp1_res,J(t),param_active,params_passive)
+		call Objective(Xnp1_res,J(t),param_active,params_passive)
 		if(counter .eq. inttau) then
 			counter = 0
 		end if
-        Write(1) X1
+        Write(1) J(t)
 	end do
 
 	
