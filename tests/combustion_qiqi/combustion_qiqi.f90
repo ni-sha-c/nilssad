@@ -1,11 +1,12 @@
 !Simple model of combustion in gas turbines
 
 module combustion_qiqi
+	use cheb
 	implicit none
-
+	
 	REAL, PARAMETER :: Pi = 3.1415927
 	double precision, parameter :: dt = 0.005d0
-	integer, parameter :: d = 20, N = 10
+	integer, parameter :: d = 33, N = 10
 	integer, parameter :: N_p = 5	
 	double precision, parameter :: sigma = 10., b = 8./3.
 
@@ -94,8 +95,7 @@ subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
 						- 2.d0*beta*(((1.d0/3.d0 + uf(Xtmtau,xf))**2.0d0 &
 						+ 0.001d0)**0.25d0 &
 						  - (1.d0/3.d0)**0.5d0)* &
-						 sin(i*pi*xf)
-		dXdt_res(2*N+i) 	
+						 sin(i*pi*xf)     	
 	end do
 end subroutine dXdt
 subroutine Objective(X,J,param_active,params_passive)

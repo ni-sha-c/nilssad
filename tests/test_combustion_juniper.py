@@ -84,6 +84,7 @@ def test_gradient():
     #assert all(abs(J[:,1] - 100) < 1E-12)
     #assert all(abs(G[:,1]) < 1E-12)
     print("s is", s)
+    print("J is", J[:,0])
     print("G is", G[:,0])
     #assert all(abs(J[:,0] - ((s-31)**2 + 85)) < 20)
     #assert all(abs(G[:,0] - (2 * (s-31))) < 2)
