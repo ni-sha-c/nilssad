@@ -11,24 +11,24 @@ RTSUPP=w2f__types OAD_active_custom OAD_cp OAD_tape OAD_rev
 
 #Interface with nilss
 solver_ht: $(addsuffix .o, $(RTSUPP)) \
-combustion_juniper_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss.o
+cheb.o combustion_qiqi_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss.o
 	${F90C} -o $@ $^
 
 solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
-combustion_juniper_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
+cheb.o combustion_qiqi_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
 	${F90C} -o $@ $^
 
 
 solver_primal: \
-combustion_juniper_passive.o driver_primal.o 
+cheb.o combustion_qiqi_passive.o driver_primal.o 
 	${F90C} -o $@ $^ 
 
 solver_attractor: \
-combustion_juniper_passive.o driver_attractor.o 
+cheb.o combustion_qiqi_passive.o driver_attractor.o 
 	${F90C} -o $@ $^ 
 
 solver_phaseportrait: \
-combustion_juniper_passive.o phase_portrait.o 
+cheb.o combustion_qiqi_passive.o phase_portrait.o 
 	${F90C} -o $@ $^ 
 
 
@@ -44,7 +44,7 @@ toolChainh : numCoreh.f90
 	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 	cat OAD_active.f90 | sed 's/100/33/' > OAD_active_custom.f90		
 
-numCoreh.f90: combustion_juniper.f90 head.prepped.homo.f90
+numCoreh.f90: combustion_qiqi.f90 head.prepped.homo.f90
 	cat $^ > $@
 
 toolChaini : numCorei.f90
@@ -52,12 +52,12 @@ toolChaini : numCorei.f90
 	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 	cat OAD_active.f90 | sed 's/100/33/' > OAD_active_custom.f90	
 
-numCorei.f90: combustion_juniper.f90 head.prepped.inhomo.f90
+numCorei.f90: cheb.f90 combustion_qiqi.f90 head.prepped.inhomo.f90
 	cat $^ > $@
 
 
-combustion_juniper_passive.f90: combustion_juniper.f90
-	cat $^ | sed 's/combustion_juniper/combustion_juniper_passive/' > $@
+combustion_qiqi_passive.f90: combustion_qiqi.f90
+	cat $^ | sed 's/combustion_qiqi/combustion_qiqi_passive/' > $@
   
 
 ad_inline.f:toolChain
@@ -78,7 +78,8 @@ ad_inline.f:toolChain
 clean: 
 	rm -f ad_template* ad_inline.f OAD_* w2f__*  iaddr* 
 	rm -f head.prepped.pre.* *.B *.xaif *.o *.mod driver driverE *~
-	rm -f numCore* *.mod* 
+	rm -f numCore* *.mod*
+	rm -f combustion_qiqi_passive.f90 
 .PHONY: clean toolChain
 # the following include has explicit rules that could replace the openad script
 include MakeExplRules.inc

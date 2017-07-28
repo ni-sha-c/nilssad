@@ -6,21 +6,21 @@ module combustion_qiqi
 	
 	
 	double precision, parameter :: dt = 0.005d0
-	integer, parameter :: d = 33, N = 10
+	integer, parameter :: N = 10
+	integer, parameter :: d = 2*N + Ncheb + 1
 	integer, parameter :: N_p = 5	
 	double precision, parameter :: sigma = 10., b = 8./3.
+	double precision, dimension(Ncheb+1,Ncheb+1) :: D_cheb
 
 contains
-
-subroutine Xnp1(X,Xnp1_res,Xtmtau,param_active,params_passive)
+subroutine Xnp1(X,Xnp1_res,param_active,params_passive)
 
 	implicit none
-	double precision :: c2, beta, xf
+	double precision :: c2, beta, xf, tau
 	double precision, dimension(d):: X, Xnp1_res
     double precision, dimension(d):: k1, k2, k3, k4
 	double precision, dimension(d):: ddt
-	integer :: i, imax
-	double precision, dimension(N) :: Xtmtau 
+	integer :: i, imax 
 	double precision, dimension(N_p-1) :: params_passive
 	double precision :: param_active 
 	
@@ -28,23 +28,24 @@ subroutine Xnp1(X,Xnp1_res,Xtmtau,param_active,params_passive)
 	c2 = params_passive(1)
 	beta = params_passive(2)
 	xf = params_passive(3)
+	tau = params_passive(4)
 		
-    call dXdt(X,ddt,Xtmtau,param_active,c2,beta,xf)
+    call dXdt(X,ddt,param_active,c2,beta,xf,tau)
     do i = 1, d, 1
 		k1(i) = dt*ddt(i)
 	   	Xnp1_res(i) = X(i) + 0.5d0*k1(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,param_active,c2,beta,xf,tau)
     do i = 1, d, 1
 		k2(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + 0.5d0*k2(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,param_active,c2,beta,xf,tau)
     do i = 1, d, 1
 		k3(i) = dt*ddt(i)
 		Xnp1_res(i) = X(i) + k3(i) 
 	end do
-	call dXdt(Xnp1_res,ddt,Xtmtau,param_active,c2,beta,xf)
+	call dXdt(Xnp1_res,ddt,param_active,c2,beta,xf,tau)
  	do i = 1, d, 1
 		k4(i) = dt*ddt(i) 
 	end do
@@ -55,6 +56,8 @@ subroutine Xnp1(X,Xnp1_res,Xtmtau,param_active,params_passive)
                 1.d0/6.d0*k4(i)   
 
 	end do
+	Xnp1_res(d) = 0.d0
+	!Xnp1_res(d) = uf(Xnp1_res,xf) 
 
 end subroutine Xnp1
 double precision function uf(X,xf)
@@ -80,23 +83,35 @@ double precision function zeta(i,c1,c2)
 	zeta = c1*(i**2.0) + c2*(i**0.5d0)
 
 end function zeta
-subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
+subroutine dXdt(X,dXdt_res,c1,c2,beta,xf,tau)
 	implicit none
 	double precision :: c1, c2, beta
-	double precision :: xf
+	double precision :: xf, tau
 	double precision, dimension(d) :: X
-	double precision, dimension(N) :: Xtmtau
 	double precision, intent(out), dimension(d) :: dXdt_res
-	integer :: i
+	integer :: i,j
 	
 	do i = 1, N, 1
 		dXdt_res(i) = i*pi*X(N+i)
 		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i,c1,c2)*X(N+i) &
-						- 2.d0*beta*(((1.d0/3.d0 + uf(Xtmtau,xf))**2.0d0 &
+						- 2.d0*beta*(((1.d0/3.d0 + X(2*N+1))**2.0d0 &
 						+ 0.001d0)**0.25d0 &
 						  - (1.d0/3.d0)**0.5d0)* &
-						 sin(i*pi*xf)     	
+						 sin(i*pi*xf)
 	end do
+
+	
+	do i = 1, Ncheb + 1, 1
+	
+		dXdt_res(2*N+i) = 0.d0
+		do j = 1, Ncheb + 1, 1
+			dXdt_res(2*N+i) = dXdt_res(2*N+i) - &
+							(1.d0/tau)*D_cheb(i,j)*X(2*N+j)
+		end do   	
+
+
+	end do
+
 end subroutine dXdt
 subroutine Objective(X,J,param_active,params_passive)
 	implicit none

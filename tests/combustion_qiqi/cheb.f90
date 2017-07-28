@@ -23,10 +23,11 @@ contains
 	end subroutine step_forward_euler
 		
 	
-	subroutine cheb_diff_matrix(D)
+	function cheb_diff_matrix()
 		implicit none
 		real(kind=8), dimension(Ncheb + 1, Ncheb + 1) :: D
 		real(kind=8), dimension(Ncheb + 1) :: x
+		real(kind=8), dimension(Ncheb + 1, Ncheb + 1):: cheb_diff_matrix
 		integer :: i,j,k
 		D = 0.d0
 	
@@ -53,6 +54,7 @@ contains
 		do j = 2, Ncheb, 1
 			D(Ncheb+1,j) = 2.d0*(-1)**(Ncheb+j-1)/(x(Ncheb+1)-x(j))
 		end do
-		D(2:Ncheb,Ncheb+1) = -1.d0*D(Ncheb+1,2:Ncheb)/4.d0 		
-	end subroutine cheb_diff_matrix 
+		D(2:Ncheb,Ncheb+1) = -1.d0*D(Ncheb+1,2:Ncheb)/4.d0 	
+		cheb_diff_matrix = D
+	end function cheb_diff_matrix 
 end module cheb
