@@ -4,7 +4,7 @@ module combustion_qiqi
 	use cheb
 	implicit none
 	
-	REAL, PARAMETER :: Pi = 3.1415927
+	
 	double precision, parameter :: dt = 0.005d0
 	integer, parameter :: d = 33, N = 10
 	integer, parameter :: N_p = 5	
