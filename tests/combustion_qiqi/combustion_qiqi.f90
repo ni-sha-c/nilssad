@@ -56,7 +56,7 @@ subroutine Xnp1(X,Xnp1_res,param_active,params_passive)
                 1.d0/6.d0*k4(i)   
 
 	end do
-	Xnp1_res(d) = 0.d0
+	Xnp1_res(2*N+1) = 0.d0
 	!Xnp1_res(d) = uf(Xnp1_res,xf) 
 
 end subroutine Xnp1
@@ -90,7 +90,8 @@ subroutine dXdt(X,dXdt_res,c1,c2,beta,xf,tau)
 	double precision, dimension(d) :: X
 	double precision, intent(out), dimension(d) :: dXdt_res
 	integer :: i,j
-	
+
+	D_cheb =  cheb_diff_matrix()	
 	do i = 1, N, 1
 		dXdt_res(i) = i*pi*X(N+i)
 		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i,c1,c2)*X(N+i) &

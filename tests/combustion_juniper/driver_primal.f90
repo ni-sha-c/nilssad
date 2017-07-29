@@ -45,7 +45,7 @@ program flow
 		X1(t) = X0(t) 
 		zeroarray(t) = 0.d0
 	end do
-
+	Xtmtau = 0.d0
 	do t = 1, inttau, 1
 		call Xnp1(X1,Xnp1_res,zeroarray,param_active,params_passive)
 		do t1 = 1, d, 1
