@@ -43,8 +43,8 @@ program flow
 		call Xnp1(X1,Xnp1_res,param_active,params_passive)
 		do t1 = 1, d, 1
 			X1(t1) = Xnp1_res(t1)
-			call Objective(Xnp1_res,J(t),param_active,params_passive)
 		end do
+		call Objective(Xnp1_res,J(t),param_active,params_passive)
 	end do
 
 	

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 my_path = os.path.dirname(os.path.abspath(__file__))
 solver = os.path.join(my_path, 'solver_attractor')
-u0 = np.loadtxt(os.path.join(my_path, 'u0'))
+
 
 def solve(u, s, nsteps):
     tmp_path = tempfile.mkdtemp()
@@ -29,9 +29,9 @@ Nsteps = 50000
 Ns = 150
 k = 0
 p = np.zeros(Ns)
-ss = np.linspace(0.005,0.05,Ns)
+ss = np.linspace(0.005,0.035,Ns)
 for s in ss:
-    eta = np.zeros(20)
+    eta = np.zeros(31)
     eta[0] = 2.0
     eta[10] = 2.0
     u = np.zeros(Ns)
@@ -44,4 +44,4 @@ slope, intercept, r_value, p_value, std_err = linregress(ss, p)
 print("slope is: ",slope) 
 ax.plot(ss,p,"o",linewidth=1.0)
 plt.legend(loc='upper left')
-fig.savefig('../../demo/plots/pf_vs_c1.eps', facecolor=fig.get_facecolor(), edgecolor='none', format='eps', dpi=2000)
+fig.savefig('../../demo/plots/pf_vs_c1_qiqi.eps', facecolor=fig.get_facecolor(), edgecolor='none', format='eps', dpi=2000)

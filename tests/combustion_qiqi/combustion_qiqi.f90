@@ -5,7 +5,7 @@ module combustion_qiqi
 	implicit none
 	
 	
-	double precision, parameter :: dt = 0.005d0
+	double precision, parameter :: dt = 0.0005d0
 	integer, parameter :: N = 10
 	integer, parameter :: d = 2*N + Ncheb + 1
 	integer, parameter :: N_p = 5	
@@ -56,8 +56,7 @@ subroutine Xnp1(X,Xnp1_res,param_active,params_passive)
                 1.d0/6.d0*k4(i)   
 
 	end do
-	Xnp1_res(2*N+1) = 0.d0
-	!Xnp1_res(d) = uf(Xnp1_res,xf) 
+	Xnp1_res(d) = uf(Xnp1_res,xf) 
 
 end subroutine Xnp1
 double precision function uf(X,xf)
