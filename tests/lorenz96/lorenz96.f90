@@ -3,7 +3,7 @@
 module lorenz96
     implicit none
     
-    integer, parameter :: d = 40    
+    integer, parameter :: d = 32 
 
 contains
 

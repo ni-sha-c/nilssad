@@ -71,11 +71,11 @@ def solve_iht(u, v, s, nsteps):
 
 if __name__ == '__main__':
 #def test_gradient():
-    s = linspace(8.0, 8.0, 1)
+    s = linspace(256.0, 256.0, 1)
     J, G = zeros([s.size, 2]), zeros([s.size, 2])
     for i, si in enumerate(s):
         print(i)
-        Ji, Gi = shadowing(solve, solve_ht, solve_iht, u0, si, 10, 10, 100000, 500000)
+        Ji, Gi = shadowing(solve, solve_ht, solve_iht, u0, si, 10, 16, 100000, 500000)
         J[i,:] = Ji
         G[i,:] = Gi
     assert all(abs(J[:,1] - 100) < 1E-12)
