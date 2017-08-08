@@ -25,11 +25,11 @@ def solve(u, s, nsteps):
 
 fig, ax = plt.subplots(1,2)
 fig.set_facecolor('black')
-plt.setp([a.get_xaxis().set_visible(False) for a in ax[:]])
-plt.setp([a.get_yaxis().set_visible(False) for a in ax[:]])
-plt.setp([a.set_facecolor('black') for a in ax[:]])
+#plt.setp([a.get_xaxis().set_visible(False) for a in ax[:]])
+#plt.setp([a.get_yaxis().set_visible(False) for a in ax[:]])
+#plt.setp([a.set_axis_bgcolor('black') for a in ax[:]])
 s = 0.05
-Nsteps = 50000
+Nsteps = 500000
 Nplotsteps = Nsteps
 k1 = 0
 colors=["r","b"]
@@ -55,4 +55,4 @@ for i in range(2):
     ax[k1].plot(p[5000:],u[5000:],linewidth=1.0,color=colors[i])
     k1 = k1+1
 #plt.legend(loc='upper left')
-fig.savefig('../../demo/plots/juniper_attractor.eps', facecolor=fig.get_facecolor(), edgecolor='none', format='eps', dpi=2000)
+fig.savefig('../../demo/plots/juniper_attractor_fixed1.eps', facecolor=fig.get_facecolor(), edgecolor='none', format='eps', dpi=2000)

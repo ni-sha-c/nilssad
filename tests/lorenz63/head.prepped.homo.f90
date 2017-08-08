@@ -23,11 +23,8 @@ subroutine head_homogeneous(ds,s,y,X0,v0,nSteps)
 		X(3) = Xnp1_res(3)
 	end do
 	do t = 1, 3, 1
-		y(t) = 2*ds !X(t)
+		y(t) = X(t)
 	end do
-	y(1) = 1.d0
-	y(2) = s
-	y(3) = 1.d0
 !$openad DEPENDENT(y)
 
 end subroutine

@@ -1,7 +1,7 @@
 program driver
 	use OAD_active
 	use OAD_rev
-	use lorenz63_passive
+	use lorenz96_passive
 	implicit none 
 	external head_homogeneous
 	type(active), dimension(:), allocatable :: x
