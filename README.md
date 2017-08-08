@@ -1,5 +1,4 @@
-# Non-Intrusive Least Squares Shadowing [Ni, Wang 2017] for sensitivity
-# analysis in chaotic systems
+# Non-Intrusive Least Squares Shadowing [Ni, Wang 2017] for sensitivity analysis in chaotic systems
 
 ## Description
 
