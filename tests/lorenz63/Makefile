@@ -36,6 +36,9 @@ solver_primal: \
 lorenz63_passive.o driver_primal.o 
 	${F90C} -o $@ $^ 
 
+test: $(addsuffix .o, $(RTSUPP))  \
+lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss_c.o 
+	${F90C} -o $@ $^ 
 
 
 numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain 

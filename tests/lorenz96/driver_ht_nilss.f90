@@ -81,7 +81,7 @@ program driver
 
 		call head_homogeneous(x(t)%v,s,y(:,t),X0,v0(:,t),nSteps)
 
-		!print *, "homogeneous tangent is: ", x(t)%d
+		print *, "homogeneous tangent is: ", x(t)%d
 		Write(1) x(t)%d(1:d)		
 
 		!Xtemp2 = Xorig + eps*v0(:,t)

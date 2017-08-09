@@ -12,7 +12,8 @@ subroutine head_homogeneous(ds,s,y,X0,v0,nSteps)
 
 
 
-!$openad INDEPENDENT(ds) 
+!$openad INDEPENDENT(ds)
+	print *, "hello, this is fortran called by C" 
 	X(1) = X0(1) + v0(1)*ds
 	X(2) = X0(2) + v0(2)*ds
 	X(3) = X0(3) + v0(3)*ds
