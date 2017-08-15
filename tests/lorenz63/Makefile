@@ -47,25 +47,21 @@ driver_fortran_ht.o: driver_fortran_ht.f90
 for-sub.o: lorenz63_passive.f90 for-sub.f90  
 	${F90C} -ffree-form -c $^
 
-driver_fortran_primal.o: driver_fortran_primal.f90 
-	${F90C} -ffree-form -c $^
-
-
 driver_primal_c.o: driver_primal_c.c
 	${CC} -c -fPIC $^ 
 
 driver_fortran_primal.o : driver_fortran_primal.f90
-	${F90C} -c -fPIC $^
+	${F90C} -ffree-form -c -fPIC $^
 
 lorenz63_passive.o : lorenz63_passive.f90
 	${F90C} -c -fPIC $^
 
 
-test1: lorenz63_passive.o \
-driver_fortran_primal.o driver_primal_c.o
+test1: driver_primal_c.o lorenz63_passive.o \
+driver_fortran_primal.o 
 	${F90C} -o $@ $^
-	${CC} -shared -Wl,-soname,libfoo.so -o libfoo.o $^
-
+	${CC} -shared -lgfortran -Wl,-soname,libfoo.so -o libfoo.so driver_primal_c.o lorenz63_passive.o driver_fortran_primal.o  
+	#ld -shared -o libfoo.so $^
 numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain 
 
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
@@ -121,7 +117,7 @@ ad_inline.f:toolChain
 clean: 
 	rm -f ad_template* ad_inline.f OAD_* w2f__*  iaddr* 
 	rm -f head.prepped.pre.* *.B *.xaif *.o *.mod driver driverE *~
-	rm -f numCore* 
+	rm -f numCore* *.so 
 .PHONY: clean toolChain
 # the following include has explicit rules that could replace the openad script
 include MakeExplRules.inc
