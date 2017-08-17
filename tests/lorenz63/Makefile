@@ -57,9 +57,9 @@ lorenz63_passive.o : lorenz63_passive.f90
 	${F90C} -c -fPIC $^
 
 
-test2: lorenz63_passive.o \
-driver_fortran_primal.o 
-	${F90C} -shared -lgfortran -Wl,-soname,libfoo.so -o libfoo.so lorenz63_passive.o driver_fortran_primal.o  
+test2: lorenz63_passive.f90 \
+driver_fortran_primal.f90 
+	f2py -c -m libprimal driver_fortran_primal.f90 lorenz63_passive.f90   
 
 
 
