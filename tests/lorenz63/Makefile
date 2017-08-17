@@ -51,10 +51,16 @@ driver_primal_c.o: driver_primal_c.c
 	${CC} -c -fPIC $^ 
 
 driver_fortran_primal.o : driver_fortran_primal.f90
-	${F90C} -ffree-form -c -fPIC $^
+	${F90C} -c -fPIC $^
 
 lorenz63_passive.o : lorenz63_passive.f90
 	${F90C} -c -fPIC $^
+
+
+test2: lorenz63_passive.o \
+driver_fortran_primal.o 
+	${F90C} -shared -lgfortran -Wl,-soname,libfoo.so -o libfoo.so lorenz63_passive.o driver_fortran_primal.o  
+
 
 
 test1: driver_primal_c.o lorenz63_passive.o \
