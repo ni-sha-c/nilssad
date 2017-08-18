@@ -59,7 +59,7 @@ lorenz63_passive.o : lorenz63_passive.f90
 
 test2: lorenz63_passive.f90 \
 driver_fortran_primal.f90 
-	f2py -c -m libprimal driver_fortran_primal.f90 lorenz63_passive.f90   
+	f2py -c -m libprimal $^ 
 
 
 
