@@ -4,10 +4,11 @@ module combustion_juniper
 	implicit none
 
 	REAL, PARAMETER :: Pi = 3.1415927
-	double precision, parameter :: dt = 0.01d0
+	double precision, parameter :: dt = 0.001d0
 	integer, parameter :: d = 20, N = 10
 	integer, parameter :: N_p = 5	
-	double precision, parameter :: sigma = 10., b = 8./3.
+	double precision, parameter :: sigma = 10., b = 8./3., rho = 28.
+	double precision :: alpha = 0.01, tauL = 10.d0
 
 contains
 
@@ -79,23 +80,49 @@ double precision function zeta(i,c1,c2)
 	zeta = c1*(i**2.0) + c2*(i**0.5d0)
 
 end function zeta
-subroutine dXdt(X,dXdt_res,Xtmtau,c1,c2,beta,xf)
+double precision function qdot(delayed_velocity)
+	implicit none
+	double precision :: delayed_velocity
+	double precision, dimension(5) :: coeffs
+	integer :: i 
+	coeffs(1) = 0.5d0
+	coeffs(2) = -0.108d0
+	coeffs(3) = -0.044d0
+	coeffs(4) = 0.059d0
+	coeffs(5) = -0.012d0
+	qdot = 0.d0
+	do i = 1, 5, 1
+			qdot = qdot + coeffs*(delayed_velocity**i)
+	end do
+end function qdot
+subroutine dXdt(X,dXdt_res,c1,c2,beta,xf,alpha)
 	implicit none
 	double precision :: c1, c2, beta
-	double precision :: xf
+	double precision :: xf, velocity_fluctuation
+	double precision :: velocity_flame
 	double precision, dimension(d) :: X
-	double precision, dimension(N) :: Xtmtau
+	double precision :: heat_release
 	double precision, intent(out), dimension(d) :: dXdt_res
-	integer :: i
-	
+	integer :: i,j
+
+	dXdt_res(d-2) = 1.d0/tauL*(sigma*(X(d-1)-X(d-2)))
+	dXdt_res(d-1) = 1.d0/tauL*(X(d-2)*(rho-X(d)) - X(d-1))
+	dXdt_res(d) = 1.d0/tauL*(X(d-2)*X(d-1) - b*X(d))
+	velocity_fluctuation = alpha*X(d-2)/(rho - 1.d0)
+	velocity_flame = uf(X,xf) + velocity_fluctuation
+	heat_release = beta*qdot(X(2*N+Ncheb))		
+
 	do i = 1, N, 1
 		dXdt_res(i) = i*pi*X(N+i)
 		dXdt_res(N+i) = -1.d0*i*pi*X(i) - zeta(i,c1,c2)*X(N+i) &
-						- 2.d0*beta*(((1.d0/3.d0 + uf(Xtmtau,xf))**2.0d0 &
-						+ 0.001d0)**0.25d0 &
-						  - (1.d0/3.d0)**0.5d0)* &
-						 sin(i*pi*xf)	
+						- 2.d0*heat_release*sin(i*pi*xf)
+		dXdt_res(2*N+i) = -2.d0/tau*D(i+1,0)*velocity_flame 
+		do j = 1, N, 1 
+			dXdt_res(2*N+i) = dXdt_res(2*N+i) + &
+							X(2*N +j)*D(i+1,j)
+		end do 	
 	end do
+ 
 end subroutine dXdt
 subroutine Objective(X,J,param_active,params_passive)
 	implicit none
