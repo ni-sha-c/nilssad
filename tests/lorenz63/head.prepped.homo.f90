@@ -1,15 +1,15 @@
 subroutine head_homogeneous(ds,s,y,X0,v0,nSteps,d)
 	use Lorenz63
 	implicit none
-	integer, intent(in) :: d 
+	integer :: d 
 	double precision, dimension(d) :: X
 	double precision, dimension(d) :: Xnp1_res
-	double precision, intent(in) :: s
-	double precision, dimension(d), intent(in) :: X0, v0
-	double precision, dimension(d), intent(out) :: y
+	double precision  :: s
+	double precision, dimension(d) :: X0, v0
+	double precision, dimension(d) :: y
 	integer :: t,t1
-	integer, intent(in) :: nSteps
-	double precision, intent(in) :: ds
+	integer :: nSteps
+	double precision :: ds
 
 
 

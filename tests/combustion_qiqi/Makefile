@@ -31,6 +31,9 @@ solver_phaseportrait: \
 cheb.o combustion_qiqi_passive.o phase_portrait.o 
 	${F90C} -o $@ $^ 
 
+testcheb: \
+cheb.o test_cheb.o
+	${F90C} -o $@ $^ 
 
 
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 

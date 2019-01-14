@@ -1,6 +1,6 @@
 module cheb
 	implicit none
-	integer, parameter :: Ncheb = 10 ! this means that the interpolating 
+	integer, parameter :: Ncheb = 5 ! this means that the interpolating 
 !Lagrange polynomials have a maximum degree of Ncheb 
 	REAL, PARAMETER :: Pi = 3.1415927
 contains
@@ -54,7 +54,11 @@ contains
 		do j = 2, Ncheb, 1
 			D(Ncheb+1,j) = 2.d0*(-1)**(Ncheb+j-1)/(x(Ncheb+1)-x(j))
 		end do
-		D(2:Ncheb,Ncheb+1) = -1.d0*D(Ncheb+1,2:Ncheb)/4.d0 	
-		cheb_diff_matrix = D
+		D(2:Ncheb,Ncheb+1) = -1.d0*D(Ncheb+1,2:Ncheb)/4.d0 
+		do j = 1, Ncheb + 1, 1
+			do i = 1, Ncheb + 1, 1	
+				cheb_diff_matrix(j,i) = D(Ncheb - j + 2,Ncheb-i + 2)
+			end do
+		end do
 	end function cheb_diff_matrix 
 end module cheb

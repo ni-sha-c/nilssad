@@ -10,6 +10,7 @@ RTSUPP=w2f__types OAD_active_custom OAD_cp OAD_tape OAD_rev
 #RTSUPP=w2f__types OAD_active  
 
 #Tests
+
 solver_h_test: $(addsuffix .o, $(RTSUPP)) \
 lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_homogeneous.o
 	${F90C} -o $@ $^
@@ -24,13 +25,14 @@ lorenz63_passive.o numCore.pre.xb.x2w.w2f.post.o driver.o
 
 
 #Interface with nilss
+
 solver_ht: $(addsuffix .o, $(RTSUPP)) \
 lorenz63_passive.o numCoreh.pre.xb.x2w.w2f.post.o driver_ht_nilss.o
 	${F90C} -o $@ $^
 
-solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
+#solver_iht: $(addsuffix .o, $(RTSUPP)) \ \
 lorenz63_passive.o numCorei.pre.xb.x2w.w2f.post.o driver_iht_nilss.o
-	${F90C} -o $@ $^
+#	${F90C} -o $@ $^
 
 
 solver_primal: \
@@ -73,15 +75,15 @@ numCore.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChain
 numCoreh.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90, $(RTSUPP)) iaddr.c : toolChainh 
 
 
-numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
+#numCorei.pre.xb.x2w.w2f.post.f90 $(addsuffix .f90,  $(RTSUPP)) iaddr.c : toolChaini 
 	
 
-toolChain : numCore.f90
-	openad -c -m rj $<
-	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+#toolChain : numCore.f90
+#	openad -c -m rj $<
+#	#rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
 
-numCore.f90: Lorenz63.f90 head.prepped.f90
-	cat $^ > $@
+#numCore.f90: Lorenz63.f90 head.prepped.f90
+#	cat $^ > $@
 
 toolChainh : numCoreh.f90
 	openad -c -m rj $<
@@ -91,12 +93,12 @@ toolChainh : numCoreh.f90
 numCoreh.f90: Lorenz63.f90 head.prepped.homo.f90
 	cat $^ > $@
 
-toolChaini : numCorei.f90
-	openad -c -m rj $<
-	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
-	cat OAD_active.f90 | sed 's/100/3/' > OAD_active_custom.f90	
-numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90
-	cat $^ > $@
+#toolChaini : numCorei.f90
+#	openad -c -m rj $<
+#	rsync -av ${OPENADROOT}/runTimeSupport/vector/OAD_active.f90 ./
+#	cat OAD_active.f90 | sed 's/100/3/' > OAD_active_custom.f90	
+#numCorei.f90: Lorenz63.f90 head.prepped.inhomo.f90
+#	cat $^ > $@
 
 
 

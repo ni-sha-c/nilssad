@@ -6,6 +6,7 @@ program driver
 	external head_homogeneous
 	type(active), dimension(:), allocatable :: x
     type(active), dimension(:,:), allocatable :: y
+	integer, parameter :: d = 3
 	double precision, dimension(d) :: X0, X1, Xorig, Xtemp1, Xtemp2
 	double precision, dimension(:,:), allocatable :: v0,v,vorig
 	integer :: t, nSteps, subspace_dimension, t1, t2
